@@ -1,0 +1,104 @@
+@import 'tailwindcss';
+
+:root {
+  /* blavkvocIA — black + voice + IA */
+  --bg: #000000;
+  --surface: rgba(255, 255, 255, 0.04);
+  --glass: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.1);
+  --grid: rgba(255, 255, 255, 0.06);
+  --text: #f4f4f5;
+  --text-dim: #a1a1aa;
+  --muted: #71717a;
+  --accent: #8b5cf6;
+  --accent-bright: #a78bfa;
+  --cyan: #22d3ee;
+  --pink: #ec4899;
+  --green: #22d3ee;
+  --blue: #818cf8;
+  --purple: #c084fc;
+  --orange: #f472b6;
+  --font-display: 'Syne', system-ui, sans-serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --glow: 0 0 40px rgba(139, 92, 246, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-body);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.35);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--mono);
+}
+
+/* blavkvocIA brand */
+.brand-blavk {
+  color: var(--text);
+}
+.brand-voc {
+  background: linear-gradient(135deg, var(--accent), var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.brand-ia {
+  color: var(--cyan);
+  text-shadow: 0 0 24px rgba(34, 211, 238, 0.5);
+}
+
+.glass-panel {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+}
+
+.glow-btn {
+  background: linear-gradient(135deg, var(--accent), #6366f1);
+  color: white;
+  box-shadow: var(--glow);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.glow-btn:hover {
+  box-shadow: 0 0 50px rgba(139, 92, 246, 0.5);
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
