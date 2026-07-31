@@ -3,7 +3,7 @@ interface ModuleNoteProps {
   tryIt: string
 }
 
-export function ModuleNote({ decision, tryIt }: ModuleNoteProps) {
+export function ModuleNote({ decision, tryIt }: Readonly<ModuleNoteProps>) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
       <div className="card" style={{ padding: '1.25rem' }}>

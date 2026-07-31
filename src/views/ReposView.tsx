@@ -8,34 +8,73 @@ function projectHref(p: (typeof profile.projects)[number]) {
   return undefined
 }
 
+function monogram(name: string) {
+  const initials = name
+    .split(/\s+/)
+    .filter((w) => w.length > 2)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join('')
+  return (initials || name.slice(0, 2)).toUpperCase()
+}
+
 function ProjectShot({
   project: p,
   href,
-}: {
+}: Readonly<{
   project: (typeof profile.projects)[number]
   href?: string
-}) {
-  if (!p.image) return null
+}>) {
+  const address = (p.url ?? p.repo ?? 'localhost:5173').replace(/^https?:\/\//, '')
 
-  const img = (
+  const viewport = p.image ? (
     <img
       src={p.image}
       alt={p.imageAlt ?? `Captura de ${p.name}`}
       className="repo-card__img"
+      width={1349}
+      height={643}
       loading="lazy"
       decoding="async"
     />
+  ) : (
+    <span className="repo-card__mono" aria-hidden>
+      {monogram(p.name)}
+    </span>
   )
+
+  const viewportClass = [
+    'repo-card__viewport',
+    p.image ? '' : 'repo-card__viewport--empty',
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <div className="repo-card__media">
-      {href ? (
-        <a href={href} target="_blank" rel="noopener noreferrer" className="repo-card__media-link">
-          {img}
-        </a>
-      ) : (
-        img
-      )}
+      <div className="repo-card__window">
+        <div className="repo-card__chrome">
+          <span className="repo-card__dots" aria-hidden>
+            <i className="repo-card__dot" />
+            <i className="repo-card__dot" />
+            <i className="repo-card__dot" />
+          </span>
+          <span className="repo-card__addr">{address}</span>
+        </div>
+        {href && p.image ? (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={viewportClass}
+            aria-label={`Abrir ${p.name}`}
+          >
+            {viewport}
+          </a>
+        ) : (
+          <div className={viewportClass}>{viewport}</div>
+        )}
+      </div>
     </div>
   )
 }
