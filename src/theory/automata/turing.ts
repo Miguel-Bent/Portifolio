@@ -12,6 +12,18 @@ export class TapeMachine {
     return { state: this.state, tape: [...this.tape], head: this.head }
   }
 
+  loadCustom(cells: string[], head = 0, state = 'boot') {
+    this.tape = cells
+    this.head = head
+    this.state = state
+  }
+
+  resetDefault() {
+    this.tape = ['⊔', ...SYMS, '⊔']
+    this.head = 1
+    this.state = 'halt'
+  }
+
   seek(id: NodeId) {
     const s = CS_GRAPH.vertices[id].symbol
     const i = this.tape.indexOf(s)

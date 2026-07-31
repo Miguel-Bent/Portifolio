@@ -9,6 +9,9 @@ import type {
   RunMetrics,
   TmSnapshot,
 } from '../theory/types'
+import type { FlowDir } from '../navigation/graph-direction'
+import { flowBetween } from '../navigation/graph-direction'
+import { edgesFromPath, mergeEdges, TOTAL_EDGE_COUNT } from '../theory/graph/edges'
 import { cortex } from '../cortex/engine'
 import { synapse } from '../synapse/bus'
 
@@ -31,6 +34,11 @@ interface LabState {
   tm: TmSnapshot
   choreoAt: NodeId | null
   labOpen: boolean
+  booting: boolean
+  introPassed: boolean
+  discoveredEdges: string[]
+  graphComplete: boolean
+  flowDir: FlowDir
   logs: LogLine[]
   metrics: RunMetrics | null
   goto: (t: NodeId) => void
@@ -63,6 +71,11 @@ export const useLab = create<LabState>((set) => ({
   tm: cortex.tmSnap(),
   choreoAt: null,
   labOpen: false,
+  booting: true,
+  introPassed: false,
+  discoveredEdges: [],
+  graphComplete: false,
+  flowDir: { dx: 0, dy: 0 },
   logs: [],
   metrics: null,
   goto: (t) => synapse.fire({ type: 'GOTO', target: t }),
@@ -79,7 +92,7 @@ export function wireLab(): () => void {
       case 'PHASE':
         useLab.setState({ phase: p.phase })
         break
-      case 'PATH':
+      case 'PATH': {
         if (raf) {
           cancelAnimationFrame(raf)
           raf = 0
@@ -93,13 +106,30 @@ export function wireLab(): () => void {
           algo: p.result.algo,
         })
         break
+      }
       case 'EXPAND':
         pending = { frontier: p.frontier, visited: p.visited }
         if (!raf) raf = requestAnimationFrame(flush)
         break
-      case 'STEP':
-        useLab.setState({ choreoAt: p.node, node: p.node })
+      case 'RUN_START':
+        useLab.setState({ flowDir: flowBetween(p.from, p.to) })
         break
+      case 'STEP': {
+        const dir =
+          p.i > 0 ? flowBetween(p.path[p.i - 1], p.node) : useLab.getState().flowDir
+        const stepEdges = p.i > 0 ? edgesFromPath([p.path[p.i - 1], p.node]) : []
+        useLab.setState((s) => {
+          const discoveredEdges = mergeEdges(s.discoveredEdges, stepEdges)
+          return {
+            choreoAt: p.node,
+            node: p.node,
+            flowDir: dir,
+            discoveredEdges,
+            graphComplete: discoveredEdges.length >= TOTAL_EDGE_COUNT,
+          }
+        })
+        break
+      }
       case 'DFA':
         useLab.setState({ dfa: p.snap })
         break
@@ -109,9 +139,19 @@ export function wireLab(): () => void {
       case 'TM':
         useLab.setState({ tm: p.snap })
         break
-      case 'DONE':
-        useLab.setState({ node: p.node, choreoAt: null })
+      case 'DONE': {
+        useLab.setState((s) => {
+          const pathEdges = edgesFromPath(s.path)
+          const discoveredEdges = mergeEdges(s.discoveredEdges, pathEdges)
+          return {
+            node: p.node,
+            choreoAt: null,
+            discoveredEdges,
+            graphComplete: discoveredEdges.length >= TOTAL_EDGE_COUNT,
+          }
+        })
         break
+      }
       case 'LOG': {
         const open = useLab.getState().labOpen
         if (!open && !p.warn) break
@@ -122,6 +162,16 @@ export function wireLab(): () => void {
       }
       case 'METRICS':
         useLab.setState({ metrics: p.data })
+        break
+      case 'BOOT_START':
+        useLab.setState({ booting: true, phase: 'scan' })
+        break
+      case 'BOOT_DONE':
+        useLab.setState({ booting: false, phase: 'idle' })
+        break
+      case 'INTRO_PASSED':
+        useLab.setState({ introPassed: true })
+        document.documentElement.classList.add('intro-settled')
         break
     }
   })

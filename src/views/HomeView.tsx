@@ -1,0 +1,61 @@
+import { useLab } from '../store/lab-store'
+import { ViewFrame } from '../ui/ViewFrame'
+import { AlgoSwitcher } from '../ui/AutomataPanel'
+import { ALGO_META } from '../theory/graph/cs-graph'
+
+export function HomeView() {
+  const goto = useLab((s) => s.goto)
+  const toggle = useLab((s) => s.toggleLab)
+  const algo = useLab((s) => s.algo)
+
+  return (
+    <ViewFrame
+      id="init"
+      title="Theorylab"
+      subtitle="Portfólio e laboratório de Ciência da Computação — grafos, autômatos e pathfinding em tempo real."
+    >
+      <p>
+        Cada módulo é um nó num grafo. Cada transição corre um algoritmo de pathfinding real —
+        Dijkstra, A* ou BFS — com três autômatos a observar o processo em paralelo.
+      </p>
+
+      <div className="card" style={{ padding: '1.5rem' }}>
+        <p className="card__tag">algorithm arena</p>
+        <p style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: 'var(--text-soft)' }}>
+          {ALGO_META[algo].desc}
+        </p>
+        <div style={{ marginTop: '1rem' }}>
+          <AlgoSwitcher />
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <button type="button" onClick={() => goto('repos')} className="btn btn--accent">
+          Ver projetos
+        </button>
+        <button type="button" onClick={toggle} className="btn btn--outline">
+          Abrir CS Lab
+        </button>
+        <button type="button" onClick={() => goto('graphs')} className="btn btn--ghost">
+          Teoria de grafos →
+        </button>
+      </div>
+
+      <div className="grid-3" style={{ marginTop: '1rem' }}>
+        {[
+          { sym: 'G', label: 'Grafos', desc: '3 algoritmos comparáveis' },
+          { sym: 'T', label: 'Trace', desc: 'Percurso de aprendizagem' },
+          { sym: 'Ω', label: 'I/O', desc: 'Contacto e links' },
+        ].map((m) => (
+          <div key={m.sym} className="card">
+            <p className="card__tag">{m.sym}</p>
+            <p className="card__title">{m.label}</p>
+            <p style={{ marginTop: '0.35rem', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              {m.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </ViewFrame>
+  )
+}

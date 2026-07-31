@@ -46,4 +46,8 @@ export class NavDfa {
   reset() {
     this.state = 'idle'
   }
+
+  setState(s: NavPhase) {
+    this.state = s
+  }
 }

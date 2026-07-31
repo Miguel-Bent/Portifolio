@@ -23,6 +23,32 @@ export class PathPda {
     this.snap()
   }
 
+  loadChars(chars: string[]) {
+    this.input = chars
+    this.head = 0
+    this.stack = new Stack()
+    this.state = 'boot'
+    this.ops = 0
+  }
+
+  reset() {
+    this.input = []
+    this.head = 0
+    this.stack = new Stack()
+    this.state = 'q0'
+    this.ops = 0
+  }
+
+  bootTick(): PdaSnapshot {
+    if (this.head < this.input.length) {
+      this.stack.push(this.input[this.head])
+      this.ops++
+      this.state = 'push'
+      this.head++
+    }
+    return this.snap()
+  }
+
   /** Simula leitura + push por símbolo */
   tick(): PdaSnapshot {
     if (this.head < this.input.length) {

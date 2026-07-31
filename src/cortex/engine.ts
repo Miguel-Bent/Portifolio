@@ -7,6 +7,10 @@ import { TapeMachine } from '../theory/automata/turing'
 import { synapse } from '../synapse/bus'
 import { animator } from './animator'
 
+export const OWNER_NAME = 'MIGUEL BENTO'
+const BOOT_CHARS = OWNER_NAME.split('')
+export const BOOT_HOLD_MS = 10_000
+
 class Cortex {
   private dfa = new NavDfa()
   private pda = new PathPda()
@@ -44,8 +48,76 @@ class Cortex {
     return this.tm.snap()
   }
 
+  async boot() {
+    if (this.busy) return
+    this.busy = true
+
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const stepMs = reduce ? 0 : 110
+
+    synapse.fire({ type: 'BOOT_START' })
+
+    try {
+      const tape = ['⊔', ...BOOT_CHARS, '⊔']
+      this.dfa.setState('scan')
+      this.tm.loadCustom(tape, 1, 'boot')
+      this.pda.loadChars(BOOT_CHARS)
+
+      synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
+      synapse.fire({ type: 'TM', snap: this.tm.snap() })
+      synapse.fire({ type: 'PDA', snap: this.pda.snap() })
+
+      for (let i = 0; i < BOOT_CHARS.length; i++) {
+        this.tm.loadCustom(tape, i + 1, 'boot')
+        this.pda.bootTick()
+        synapse.fire({ type: 'TM', snap: this.tm.snap() })
+        synapse.fire({ type: 'PDA', snap: this.pda.snap() })
+        if (stepMs > 0) await animator.wait(stepMs)
+      }
+
+      for (const phase of ['run', 'walk', 'render', 'done'] as const) {
+        this.dfa.setState(phase)
+        synapse.fire({ type: 'PHASE', phase })
+        synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
+        if (!reduce) await animator.wait(80)
+      }
+
+      synapse.fire({ type: 'PHASE', phase: 'idle' })
+      this.dfa.reset()
+      synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
+
+      synapse.fire({ type: 'BOOT_HOLD_START' })
+      await animator.wait(BOOT_HOLD_MS)
+      synapse.fire({ type: 'BOOT_AUTO_ADVANCE' })
+    } finally {
+      synapse.fire({ type: 'BOOT_DONE' })
+      this.busy = false
+    }
+  }
+
+  async settleIntro() {
+    if (this.busy) return
+    this.tm.resetDefault()
+    this.tm.seek('init')
+    this.pda.reset()
+    this.dfa.reset()
+    synapse.fire({ type: 'PHASE', phase: 'idle' })
+    synapse.fire({ type: 'TM', snap: this.tm.snap() })
+    synapse.fire({ type: 'PDA', snap: this.pda.snap() })
+    synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
+  }
+
   async go(target: NodeId) {
-    if (this.busy || this.dfa.now() !== 'idle') {
+    if (this.busy) {
+      synapse.fire({ type: 'LOG', msg: `DFA ocupado — pedido ${target} ignorado`, warn: true })
+      return
+    }
+    if (this.tm.snap().state === 'boot') {
+      await this.settleIntro()
+    }
+    if (this.dfa.now() !== 'idle') {
       synapse.fire({ type: 'LOG', msg: `DFA ocupado — pedido ${target} ignorado`, warn: true })
       return
     }
@@ -90,7 +162,7 @@ class Cortex {
       const reduce =
         typeof window !== 'undefined' &&
         window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      const stepMs = reduce ? 20 : 300
+      const stepMs = reduce ? 30 : 680
 
       for (let i = 0; i < result.path.length; i++) {
         synapse.fire({ type: 'STEP', node: result.path[i], i, path: result.path })
@@ -101,14 +173,13 @@ class Cortex {
         if (i < result.path.length - 1) await animator.wait(stepMs)
       }
 
-      // PDA unwind (pop stack)
       while (this.pda.snap().stack.length > 0) {
         synapse.fire({ type: 'PDA', snap: this.pda.tick() })
-        if (!reduce) await animator.wait(80)
+        if (!reduce) await animator.wait(140)
       }
 
       this.phase('render')
-      await animator.wait(reduce ? 10 : 150)
+      await animator.wait(reduce ? 20 : 380)
 
       this.phase('done')
       this.tm.setState('halt')

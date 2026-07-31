@@ -77,5 +77,10 @@ export type Pulse =
   | { type: 'DONE'; node: NodeId }
   | { type: 'LOG'; msg: string; warn?: boolean }
   | { type: 'METRICS'; data: RunMetrics }
+  | { type: 'BOOT_START' }
+  | { type: 'BOOT_DONE' }
+  | { type: 'BOOT_HOLD_START' }
+  | { type: 'BOOT_AUTO_ADVANCE' }
+  | { type: 'INTRO_PASSED' }
 
 export type Unsub = () => void
