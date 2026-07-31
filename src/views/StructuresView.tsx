@@ -1,43 +1,84 @@
 import { profile } from '../content/profile'
 import { ViewFrame } from '../ui/ViewFrame'
 
+type Layer = { key: string; label: string; hint: string; ids: string[] }
+
+const LAYERS: Layer[] = [
+  {
+    key: 'frontend',
+    label: 'UI',
+    hint: 'interface & client',
+    ids: ['next', 'react', 'ts', 'js', 'tailwind', 'htmlcss', 'vite', 'pwa'],
+  },
+  {
+    key: 'backend',
+    label: 'API',
+    hint: 'serviços & lógica',
+    ids: ['nestjs', 'node', 'express', 'prisma', 'php', 'java'],
+  },
+  {
+    key: 'data',
+    label: 'DATA',
+    hint: 'persistência & cms',
+    ids: ['postgres', 'sql', 'strapi', 'wordpress'],
+  },
+  {
+    key: 'infra',
+    label: 'OPS',
+    hint: 'deploy & suporte',
+    ids: ['git', 'vercel', 'railway', 'networks', 'hardware'],
+  },
+  {
+    key: 'design',
+    label: 'UX',
+    hint: 'protótipo',
+    ids: ['figma', 'xd'],
+  },
+]
+
 export function StructuresView() {
+  const byId = new Map(profile.skills.map((s) => [s.id, s]))
+  const used = new Set<string>()
+
+  const layers = LAYERS.map((layer) => {
+    const items = layer.ids
+      .map((id) => byId.get(id))
+      .filter((s): s is (typeof profile.skills)[number] => Boolean(s))
+    items.forEach((s) => used.add(s.id))
+    return { ...layer, items }
+  }).filter((layer) => layer.items.length > 0)
+
+  const leftover = profile.skills.filter((s) => !used.has(s.id))
+  const allLayers = leftover.length
+    ? [...layers, { key: 'more', label: '…', hint: 'outras', ids: [], items: leftover }]
+    : layers
+
   return (
     <ViewFrame
       id="structures"
       title="Structures"
-      subtitle="Tecnologias que aparecem nos projetos — sem auto-avaliação, a prova está nos repos."
+      subtitle="Camadas da stack — do browser ao deploy. Sem níveis, a prova está nos repos."
     >
-      <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '0.5rem',
-        }}
-      >
-        {profile.skills.map((s) => (
-          <span
-            key={s.id}
-            style={{
-              fontFamily: 'var(--mono)',
-              fontSize: '0.7rem',
-              padding: '0.4rem 0.75rem',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-soft)',
-              color: 'var(--text-soft)',
-              background: 'var(--surface)',
-            }}
-          >
-            {s.name}
-          </span>
+      <div className="skills-stack" role="list">
+        {allLayers.map((layer, i) => (
+          <section key={layer.key} className="skills-layer" role="listitem">
+            <div className="skills-layer__rail">
+              <span className="skills-layer__idx">{String(i + 1).padStart(2, '0')}</span>
+              <span className="skills-layer__code">{layer.label}</span>
+              <span className="skills-layer__hint">{layer.hint}</span>
+            </div>
+            <div className="skills-layer__body">
+              {layer.items.map((s) => (
+                <span key={s.id} className="skills-token">
+                  <span className="skills-token__hash" aria-hidden>
+                    #
+                  </span>
+                  {s.name}
+                </span>
+              ))}
+            </div>
+          </section>
         ))}
-      </div>
-
-      <div className="card" style={{ marginTop: '2rem' }}>
-        <p className="card__tag">idiomas</p>
-        <p style={{ marginTop: '0.75rem', color: 'var(--text-soft)' }}>
-          {profile.languages.map((lang) => `${lang.name} (${lang.level})`).join(' · ')}
-        </p>
       </div>
     </ViewFrame>
   )

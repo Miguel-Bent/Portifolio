@@ -1206,6 +1206,151 @@ html {
   }
 }
 
+/* ── Skills / Structures — architecture stack ── */
+.skills-stack {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--void);
+}
+
+.skills-layer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--border-soft);
+  background: linear-gradient(90deg, rgba(0, 229, 195, 0.04), transparent 42%);
+  transition: background 0.25s ease;
+}
+
+.skills-layer:last-child {
+  border-bottom: none;
+}
+
+.skills-layer:hover {
+  background: linear-gradient(90deg, rgba(0, 229, 195, 0.09), transparent 55%);
+}
+
+.skills-layer:nth-child(2) {
+  background: linear-gradient(90deg, rgba(155, 125, 255, 0.05), transparent 42%);
+}
+.skills-layer:nth-child(2):hover {
+  background: linear-gradient(90deg, rgba(155, 125, 255, 0.1), transparent 55%);
+}
+
+.skills-layer:nth-child(3) {
+  background: linear-gradient(90deg, rgba(255, 193, 74, 0.05), transparent 42%);
+}
+.skills-layer:nth-child(3):hover {
+  background: linear-gradient(90deg, rgba(255, 193, 74, 0.1), transparent 55%);
+}
+
+.skills-layer:nth-child(4) {
+  background: linear-gradient(90deg, rgba(255, 107, 74, 0.05), transparent 42%);
+}
+.skills-layer:nth-child(4):hover {
+  background: linear-gradient(90deg, rgba(255, 107, 74, 0.1), transparent 55%);
+}
+
+.skills-layer:nth-child(5) {
+  background: linear-gradient(90deg, rgba(74, 222, 128, 0.05), transparent 42%);
+}
+.skills-layer:nth-child(5):hover {
+  background: linear-gradient(90deg, rgba(74, 222, 128, 0.1), transparent 55%);
+}
+
+@media (min-width: 640px) {
+  .skills-layer {
+    grid-template-columns: 8.5rem 1fr;
+    align-items: start;
+    gap: 1.25rem;
+    padding: 1.15rem 1.35rem;
+  }
+}
+
+.skills-layer__rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.65rem;
+}
+
+@media (min-width: 640px) {
+  .skills-layer__rail {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    padding-top: 0.15rem;
+    border-right: 1px solid var(--border-soft);
+    padding-right: 1rem;
+  }
+}
+
+.skills-layer__idx {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.skills-layer__code {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  line-height: 1;
+}
+
+.skills-layer__hint {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.skills-layer__body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skills-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  padding: 0.38rem 0.65rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: var(--surface);
+  color: var(--text-soft);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.skills-token__hash {
+  color: var(--accent);
+  opacity: 0.55;
+  font-size: 0.62rem;
+}
+
+.skills-token:hover {
+  border-color: var(--border);
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.skills-token:hover .skills-token__hash {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
