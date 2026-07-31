@@ -13,12 +13,19 @@ export function HomeView() {
     <ViewFrame
       id="init"
       title={profile.siteName}
-      subtitle={`${profile.headline} — grafos, autômatos e pathfinding em tempo real.`}
+      subtitle={`${profile.headline} — navegação por grafo, não por menu.`}
     >
       <p>{profile.bio}</p>
 
       <div className="card" style={{ padding: '1.5rem' }}>
-        <p className="card__tag">algorithm arena</p>
+        <p className="card__tag">porquê um grafo</p>
+        <p style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: 'var(--text-soft)' }}>
+          Cada secção é um vértice; saltar entre elas corre pathfinding real. O algoritmo activo muda o
+          caminho — experimenta no painel à direita ou no CS Lab.
+        </p>
+        <p className="card__tag" style={{ marginTop: '1.25rem' }}>
+          algorithm arena
+        </p>
         <p style={{ marginTop: '0.75rem', fontSize: '0.9rem', color: 'var(--text-soft)' }}>
           {ALGO_META[algo].desc}
         </p>
@@ -41,8 +48,8 @@ export function HomeView() {
 
       <div className="grid-3" style={{ marginTop: '1rem' }}>
         {[
-          { sym: 'G', label: 'Grafos', desc: '3 algoritmos comparáveis' },
-          { sym: 'T', label: 'Trace', desc: profile.headline },
+          { sym: 'G', label: 'Grafos', desc: 'Clica nós no painel — arestas revelam-se ao percorrer' },
+          { sym: 'T', label: 'Trace', desc: 'Linha temporal de estágios e lançamentos' },
           { sym: 'Ω', label: 'I/O', desc: profile.links.location },
         ].map((m) => (
           <div key={m.sym} className="card">

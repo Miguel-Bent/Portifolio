@@ -21,14 +21,14 @@ import { profile } from '../content/profile'
 
 const META: Record<NodeId, { title: string; description: string }> = {
   init: { title: profile.name, description: profile.metaDescription },
-  automata: { title: `Autômatos · ${profile.name}`, description: 'DFA, PDA e máquina de Turing.' },
-  graphs: { title: `Grafos · ${profile.name}`, description: 'Teoria de grafos e pathfinding.' },
-  algo: { title: `Algoritmos · ${profile.name}`, description: 'Dijkstra, A* e BFS.' },
+  automata: { title: `Autômatos · ${profile.name}`, description: 'DFA que bloqueia navegação inválida durante animações.' },
+  graphs: { title: `Grafos · ${profile.name}`, description: 'Mapa ponderado com revelação progressiva de arestas.' },
+  algo: { title: `Algoritmos · ${profile.name}`, description: 'Dijkstra, A* e BFS no mesmo grafo de navegação.' },
   trace: { title: `Trace · ${profile.name}`, description: 'Linha temporal — estágios e lançamentos.' },
-  complexity: { title: `Complexidade · ${profile.name}`, description: 'Classes assintóticas.' },
-  repos: { title: `Repos · ${profile.name}`, description: 'Projetos e experimentos.' },
+  complexity: { title: `Complexidade · ${profile.name}`, description: 'Custo medido nos saltos reais do grafo.' },
+  repos: { title: `Repos · ${profile.name}`, description: 'Projetos em produção.' },
   structures: { title: `Structures · ${profile.name}`, description: 'Stack dos projetos.' },
-  memory: { title: `Memory · ${profile.name}`, description: 'Heap, stack, queue e hash.' },
+  memory: { title: `Memory · ${profile.name}`, description: 'Heap, stack e fila expostos durante a navegação.' },
   proof: { title: `Proof · ${profile.name}`, description: 'Projetos em produção e destaques.' },
   io: { title: `I/O · ${profile.name}`, description: 'Contacto.' },
 }

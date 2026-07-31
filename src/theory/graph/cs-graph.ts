@@ -179,16 +179,16 @@ export const ALGO_META: Record<AlgoId, { name: string; complexity: string; desc:
   dijkstra: {
     name: 'Dijkstra',
     complexity: 'O((V+E) log V)',
-    desc: 'Caminho mínimo com pesos não-negativos. Usa priority queue.',
+    desc: 'Custo mínimo com pesos ≥ 0 — escolho quando atalhos caros vs. rota longa importa no painel lateral.',
   },
   astar: {
     name: 'A*',
     complexity: 'O((V+E) log V)',
-    desc: 'Heurística h(n)=|depth(n)−depth(goal)| guia a busca.',
+    desc: 'h(n)=|depth(n)−depth(goal)| reduz expansões neste grafo em camadas, mantendo o óptimo.',
   },
   bfs: {
     name: 'BFS',
     complexity: 'O(V+E)',
-    desc: 'Menor número de arestas (camadas). Fila FIFO.',
+    desc: 'Menor número de saltos entre secções — ignora pesos; útil para comparar com Dijkstra no mesmo destino.',
   },
 }

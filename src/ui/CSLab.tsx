@@ -92,6 +92,9 @@ export const CSLab = memo(function CSLab() {
                 >
                   CS Lab
                 </h2>
+                <p style={{ margin: '0.35rem 0 0', fontSize: '0.75rem', color: 'var(--lab-muted)' }}>
+                  Telemetria ao vivo — muda o algoritmo e navega no grafo para ver frontier, path e fases DFA.
+                </p>
               </div>
               <button
                 type="button"
