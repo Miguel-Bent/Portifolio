@@ -3,12 +3,16 @@ import type { NodeId } from '../theory/types'
 /** Percorso DFS pela árvore do grafo — cada passo é uma aresta real */
 export const SCROLL_TOUR: NodeId[] = [
   'init',
+  'automata',
   'graphs',
+  'algo',
   'trace',
-  'repos',
-  'io',
+  'complexity',
+  'memory',
   'proof',
   'structures',
+  'repos',
+  'io',
 ]
 
 export function tourIndex(id: NodeId) {

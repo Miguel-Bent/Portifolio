@@ -36,8 +36,8 @@ export function HomeView() {
         <button type="button" onClick={toggle} className="btn btn--outline">
           Abrir CS Lab
         </button>
-        <button type="button" onClick={() => goto('graphs')} className="btn btn--ghost">
-          Teoria de grafos →
+        <button type="button" onClick={() => goto('automata')} className="btn btn--ghost">
+          Autômatos →
         </button>
       </div>
 

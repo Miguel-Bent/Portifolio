@@ -24,7 +24,7 @@ export function GraphsView() {
     <ViewFrame
       id="graphs"
       title="Grafos"
-      subtitle="Sete vértices, arestas ponderadas, três algoritmos no mesmo grafo."
+      subtitle="Onze vértices, arestas ponderadas com atalhos, três algoritmos no mesmo grafo."
     >
       <div className="grid-3">
         {ALGOS.map((a) => {

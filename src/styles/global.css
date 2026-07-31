@@ -674,13 +674,15 @@ html {
   z-index: 50;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.4rem;
+  gap: 0.15rem;
+  padding: 0.35rem;
   border-radius: 999px;
   border: 1px solid var(--border);
   background: rgba(14, 14, 18, 0.92);
   backdrop-filter: blur(20px);
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  max-width: calc(100vw - 2rem);
+  overflow-x: auto;
 }
 
 @media (min-width: 1024px) {
@@ -693,10 +695,11 @@ html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
-  padding: 0.5rem 0.65rem;
+  gap: 0.1rem;
+  padding: 0.4rem 0.5rem;
   border-radius: 999px;
-  min-width: 2.75rem;
+  min-width: 2.35rem;
+  flex-shrink: 0;
   transition: all 0.2s ease;
   color: var(--text-muted);
 }

@@ -74,7 +74,7 @@ export const LabGraph = memo(function LabGraph() {
                 x={v.pos.x * 100}
                 y={v.pos.y * 100 + 0.6}
                 textAnchor="middle"
-                fontSize="1.8"
+                fontSize="1.5"
                 fill={active ? 'var(--lab-bg)' : 'var(--lab-text)'}
                 fontFamily="var(--mono)"
               >

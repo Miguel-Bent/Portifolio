@@ -4,12 +4,16 @@ import type { NodeId } from '../theory/types'
 
 const INDEX: Record<NodeId, string> = {
   init: '00',
-  graphs: '01',
-  trace: '02',
-  repos: '03',
+  automata: '01',
+  graphs: '02',
+  algo: '03',
   structures: '04',
-  proof: '05',
-  io: '06',
+  trace: '05',
+  complexity: '06',
+  memory: '07',
+  proof: '08',
+  repos: '09',
+  io: '10',
 }
 
 export const ViewFrame = memo(function ViewFrame({

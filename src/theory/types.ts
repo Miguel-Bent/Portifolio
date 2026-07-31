@@ -1,9 +1,13 @@
 export type NodeId =
   | 'init'
+  | 'automata'
   | 'graphs'
+  | 'algo'
   | 'trace'
+  | 'complexity'
   | 'repos'
   | 'structures'
+  | 'memory'
   | 'proof'
   | 'io'
 
