@@ -13,23 +13,9 @@ Build estático Vite → **Vercel**, **Netlify** ou **GitHub Pages**.
 - [ ] Smoke test: Home → Contact via Engine em produção
 - [ ] Lighthouse básico (performance, a11y)
 
-## CI sugerido
+## CI
 
-```yaml
-# .github/workflows/ci.yml
-name: CI
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm ci
-      - run: npm test
-      - run: npm run build
-```
+Workflow em `.github/workflows/ci.yml` — corre `npm test` e `npm run build` em cada push/PR para `main`, `master` e branches `feature/**`.
 
 ## Comandos
 

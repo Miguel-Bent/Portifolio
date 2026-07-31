@@ -1,52 +1,66 @@
-# Páginas
+# Páginas (Views)
 
 ## Secções
 
-| Página      | NodeId | Conteúdo principal                    |
-|-------------|--------|-----------------------------------------|
-| Home        | H      | Apresentação, tagline, CTA              |
-| About       | A      | Bio, foto, valores                      |
-| Journey     | J      | Timeline da carreira/formação           |
-| Projects    | P      | Grafo ou lista de projetos              |
-| Skills      | S      | Grafo de competências                   |
-| Experience  | E      | Experiência profissional detalhada      |
-| Contact     | C      | Formulário / links sociais              |
+| Vista | NodeId | Símbolo | Conteúdo principal |
+|-------|--------|---------|-------------------|
+| HomeView | `init` | λ | Apresentação, headline, CTA |
+| AutomataView | `automata` | M | DFA, PDA, TM explicados |
+| GraphsView | `graphs` | G | Teoria de grafos |
+| AlgoView | `algo` | A | Dijkstra, A*, BFS (Algorithm Arena) |
+| TraceView | `trace` | T | Timeline de aprendizagem |
+| ComplexityView | `complexity` | C | Classes assintóticas |
+| ReposView | `repos` | R | Projectos e experimentos |
+| StructuresView | `structures` | S | Competências técnicas |
+| MemoryView | `memory` | H | Heap, stack, queue, hash |
+| ProofView | `proof` | P | Experiência profissional |
+| ContactView | `io` | Ω | Contacto e links |
 
 ## Localização
 
-`src/pages/` — um ficheiro por secção:
+`src/views/` — um ficheiro por secção:
 
+```text
+src/views/
+├── HomeView.tsx
+├── AutomataView.tsx
+├── GraphsView.tsx
+├── AlgoView.tsx
+├── TraceView.tsx
+├── ComplexityView.tsx
+├── ReposView.tsx
+├── StructuresView.tsx
+├── MemoryView.tsx
+├── ProofView.tsx
+└── ContactView.tsx
 ```
-src/pages/
-├── HomePage.tsx
-├── AboutPage.tsx
-├── JourneyPage.tsx
-├── ProjectsPage.tsx
-├── SkillsPage.tsx
-├── ExperiencePage.tsx
-└── ContactPage.tsx
-```
+
+O mapeamento `NodeId → View` está em `src/app/App.tsx`.
 
 ## Comportamento
 
-- Cada página = um nó do grafo.
-- Mount/unmount coordenado pelo Animation Engine (estado `Rendering`).
-- Apenas a página activa está montada (ou todas com `display: none` — decisão de implementação).
-- Conteúdo responsivo; SEO básico por página (ver `24-SEO.md`).
+- Cada vista corresponde a um nó do `CS_GRAPH`.
+- O **ScrollSite** coordena scroll e secção activa.
+- O **Cortex** controla transições via pathfinding (não scroll directo).
+- Meta tags (`title`, `description`) actualizadas por secção em `App.tsx`.
+- Conteúdo pessoal centralizado em `src/content/profile.ts`.
 
-## ActivePage
+## Registo de vistas
 
 ```tsx
-function ActivePage() {
-  const current = useEngineStore(s => s.currentSection);
-  const pages: Record<NodeId, React.FC> = { H: HomePage, A: AboutPage, /* ... */ };
-  const Page = pages[current];
-  return <Page />;
+// src/app/App.tsx
+const VIEWS = {
+  init: () => <HomeView />,
+  automata: () => <AutomataView />,
+  graphs: () => <GraphsView />,
+  // …
+  io: () => <ContactView />,
 }
 ```
 
 ## Ver também
 
-- `19-Projetos.md`
-- `20-SkillsGraph.md`
-- `24-SEO.md`
+- `19-Projetos.md` — secção Repos
+- `20-SkillsGraph.md` — secção Structures
+- `24-SEO.md` — meta por secção
+- `src/content/profile.ts` — dados do portfólio

@@ -1,68 +1,78 @@
 # Core Engine
 
-## Objetivo (Fase 1)
+## Objetivo
 
-Construir todo o núcleo computacional **sem interface gráfica**. A navegação entre secções deve funcionar integralmente por algoritmos, verificável em console ou testes unitários.
+Núcleo computacional separado da UI. A navegação entre secções funciona por algoritmos, verificável em testes unitários (Vitest) sem montar React.
 
-## Módulos
+## Módulos (implementação actual)
 
-| Módulo            | Ficheiro                          | Responsabilidade                    |
-|-------------------|-----------------------------------|-------------------------------------|
-| Grafo             | `src/algorithms/graph.ts`         | Nós, arestas, pesos, vizinhos       |
-| Priority Queue    | `src/algorithms/priorityQueue.ts` | Open set do A*                      |
-| Heurística        | `src/algorithms/heuristic.ts`     | `h(n) = \|depthAtual - depthDestino\|` |
-| A*                | `src/algorithms/astar.ts`         | Pathfinding                         |
-| Event Bus         | `src/engine/eventBus.ts`          | Pub/sub entre módulos               |
-| Navigation Engine | `src/engine/navigationEngine.ts`  | Orquestração do ciclo de navegação  |
-| Animation Engine  | `src/engine/animationEngine.ts`   | Timeline (sem DOM na Fase 1)        |
-| FSM               | `src/turing/states.ts`            | Estados Idle → Completed            |
-| Turing Machine    | `src/turing/machine.ts`           | Fita, cabeça, tabela de transição   |
+| Módulo | Ficheiro | Responsabilidade |
+|--------|----------|------------------|
+| Grafo | `src/theory/graph/cs-graph.ts` | CS_GRAPH — 11 nós, arestas, pesos |
+| Edges / Ops | `src/theory/graph/edges.ts`, `ops.ts` | Utilitários de grafo |
+| Pathfinding | `src/theory/algorithms/pathfind.ts` | Dijkstra, A*, BFS |
+| Heurística | `src/theory/algorithms/heuristic.ts` | `h(n) = \|depthAtual - depthDestino\|` |
+| Min-heap | `src/theory/structures/min-heap.ts` | Open set (Dijkstra / A*) |
+| Queue | `src/theory/structures/queue.ts` | Fila FIFO (BFS) |
+| Stack | `src/theory/structures/stack.ts` | Pilha LIFO (PDA) |
+| DFA | `src/theory/automata/dfa.ts` | Fases `idle → … → done` |
+| PDA | `src/theory/automata/pda.ts` | Empilha símbolos do path |
+| Turing | `src/theory/automata/turing.ts` | Fita de secções |
+| Event Bus | `src/synapse/bus.ts` | Pub/sub (`GOTO`, `ALGO`, `PATH`…) |
+| Cortex | `src/cortex/engine.ts` | Orquestra todo o ciclo |
+| Animator | `src/cortex/animator.ts` | Timeline de steps visuais |
+| Store | `src/store/lab-store.ts` | Estado Zustand para a UI |
 
-## Entregas
+## Entregas (estado actual)
 
-- [ ] Estrutura do grafo com 7 nós (secções)
-- [ ] Nós com `id`, `depth`, `neighbors`, `weights`
-- [ ] Priority Queue implementada manualmente
-- [ ] Algoritmo A* com open/closed set e `cameFrom`
-- [ ] Heurística por diferença de profundidade
-- [ ] Máquina de Estados (FSM) com transições válidas
-- [ ] Máquina de Turing com fita `□ H A J P S E C □`
-- [ ] Event Bus com eventos tipados
-- [ ] Navigation Engine ligando todos os módulos
-- [ ] Testes unitários para cada módulo
+- [x] Grafo com 11 nós (`init` … `io`)
+- [x] Nós com `id`, `depth`, `neighbors`, `weight`
+- [x] Min-heap implementado manualmente
+- [x] Dijkstra, A* e BFS com open/closed set
+- [x] Heurística por diferença de profundidade
+- [x] DFA com transições de fase
+- [x] PDA com stack animável
+- [x] Máquina de Turing com fita de símbolos
+- [x] Synapse com eventos tipados (`Pulse`)
+- [x] Cortex ligando todos os módulos
+- [x] Testes unitários (`pathfind.test.ts`)
 
 ## Critério de conclusão
 
-Dado um par `(origem, destino)`:
+Dado um par `(origem, destino)` e um algoritmo:
 
-1. O Engine retorna o caminho ótimo.
-2. A FSM percorre Idle → Searching → Traversing → Rendering → Completed → Idle.
-3. A fita da Turing reflete o estado atual.
-4. Os eventos são emitidos na ordem correta.
-5. Tudo funciona **sem React**.
+1. O Cortex retorna o caminho correcto.
+2. O DFA percorre as fases até `done`.
+3. A fita da Turing reflecte o estado actual.
+4. Os eventos são emitidos na ordem correcta.
+5. Funciona **sem React** (testável em Node).
 
-## Exemplo de uso (console)
+## Exemplo de uso
 
 ```typescript
-import { navigationEngine } from './engine/navigationEngine';
+import { cortex } from './cortex/engine'
+import { synapse } from './synapse/bus'
 
-navigationEngine.navigate('H', 'C');
-// → emite SEARCH_STARTED, NODE_EXPANDED..., PATH_FOUND, NAVIGATION_COMPLETED
+synapse.emit({ type: 'GOTO', target: 'io' })
+// → RUN_START, EXPAND…, PATH, STEP…, DONE
 ```
 
 ## Dependências entre módulos
 
 ```text
-graph.ts  ←  heuristic.ts  ←  astar.ts
-                ↑
-priorityQueue.ts ─┘
+cs-graph.ts  ←  heuristic.ts  ←  pathfind.ts
+                    ↑
+min-heap.ts ────────┘
+queue.ts (BFS)
 
-eventBus.ts  ←  navigationEngine.ts  →  animationEngine.ts
+synapse/bus.ts  ←  cortex/engine.ts  →  animator.ts
                       ↑
-              states.ts + machine.ts
+              automata/ (dfa, pda, turing)
 ```
 
 ## Ver também
 
-- `03-Grafo.md` até `09-TuringMachine.md` — detalhe por módulo
-- `21-Testes.md` — estratégia de testes
+- `03-Grafo.md`
+- `07-EventBus.md`
+- `21-Testes.md`
+- `33-Estrutura-de-Diretorios.md`

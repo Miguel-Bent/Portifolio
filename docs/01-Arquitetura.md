@@ -5,69 +5,73 @@
 ```text
 User
   ↓
-Event Queue
+Synapse (Event Bus)
   ↓
-Navigation Engine
+Cortex (Engine)
+  ├── NavDfa (FSM)
+  ├── PathPda (stack)
+  ├── TapeMachine (Turing)
+  └── runAlgo (Dijkstra / A* / BFS)
   ↓
-Finite State Machine
+Animator
   ↓
-Turing Machine
+Zustand (lab-store)
   ↓
-A* Search
-  ↓
-Animation Engine
-  ↓
-React Renderer
+React Renderer (views + ui)
 ```
 
-Cada camada tem uma responsabilidade única. Dados fluem de cima para baixo; eventos propagam-se lateralmente via Event Bus.
+Cada camada tem uma responsabilidade única. Dados fluem de cima para baixo; eventos propagam-se via Synapse.
 
 ## Camadas
 
-| Camada              | Responsabilidade                                      | Localização sugerida      |
-|---------------------|-------------------------------------------------------|---------------------------|
-| Event Queue / Bus   | Entrada de intenções do utilizador                    | `src/engine/eventBus.ts`  |
-| Navigation Engine   | Orquestra FSM, Turing e A*                            | `src/engine/navigationEngine.ts` |
-| FSM                 | Estados válidos da navegação                          | `src/turing/states.ts`    |
-| Turing Machine      | Transições formais na fita de secções                 | `src/turing/`             |
-| A*                  | Caminho ótimo no grafo                                | `src/algorithms/astar.ts` |
-| Animation Engine    | Timeline visual do percurso                           | `src/engine/animationEngine.ts` |
-| Camera Engine       | Interpolação de câmara ao longo do path              | `src/engine/cameraEngine.ts` |
-| React Renderer      | Apresentação; sem lógica de pathfinding               | `src/components/`, `src/pages/` |
+| Camada | Responsabilidade | Localização |
+|--------|-------------------|-------------|
+| Event Bus | Entrada de intenções (`GOTO`, `ALGO`) | `src/synapse/bus.ts` |
+| Cortex | Orquestra DFA, PDA, TM e pathfinding | `src/cortex/engine.ts` |
+| Animator | Timeline visual do percurso | `src/cortex/animator.ts` |
+| Theory / Graph | Grafo CS_GRAPH, arestas, pesos | `src/theory/graph/` |
+| Theory / Algorithms | Dijkstra, A*, BFS | `src/theory/algorithms/` |
+| Theory / Automata | DFA, PDA, Turing Machine | `src/theory/automata/` |
+| Theory / Structures | Min-heap, queue, stack | `src/theory/structures/` |
+| Store | Estado partilhado Engine ↔ UI | `src/store/lab-store.ts` |
+| UI + Views | Apresentação; sem pathfinding | `src/ui/`, `src/views/` |
+| Content | Dados do portfólio | `src/content/` |
 
-## Regras arquiteturais
+## Regras arquitecturais
 
-1. **React não calcula rotas.** Componentes emitem `NAVIGATE_REQUEST`; o Engine responde.
-2. **Algoritmos vivem fora da UI** — `src/algorithms/` e `src/turing/`.
-3. **Engines emitem eventos; componentes subscrevem.** Sem chamadas diretas de UI ao A*.
-4. **System View lê o mesmo estado** que o renderer, sem duplicar lógica.
-5. **Fase 1 é testável sem React** — o core deve funcionar em Node/Vitest.
+1. **React não calcula rotas.** Componentes emitem `GOTO` via Synapse; o Cortex responde.
+2. **Algoritmos vivem em `src/theory/`** — fora da UI.
+3. **Cortex emite eventos; componentes subscrevem** via Zustand e Synapse.
+4. **CS Lab lê o mesmo estado** que o renderer, sem duplicar lógica.
+5. **O core é testável sem React** — pathfinding em Vitest.
 
 ## Separação de responsabilidades
 
-### Core (Fase 1)
-Grafo, Priority Queue, heurística, A*, FSM, Turing Machine, Event Bus, Navigation Engine.
+### Core (`src/theory/` + `src/cortex/`)
+Grafo, min-heap, heurística, pathfinding, DFA, PDA, Turing Machine, Synapse, Cortex, Animator.
 
-### Presentation (Fase 2–3)
-Páginas, componentes, fundo animado, câmara, layout, conteúdo.
+### Presentation (`src/ui/` + `src/views/`)
+Scroll site, dock de navegação, fita, grafo visual, layout, conteúdo.
 
-### Inspection (Fase 4)
-System View / Inspector — painéis de grafo, open/closed set, fita, logs, métricas.
+### Inspection (`src/ui/CSLab.tsx`)
+CS Lab — painéis de grafo, open/closed set, fita, logs, métricas.
 
 ## Fluxo de dados
 
 ```text
-[NAVIGATE_REQUEST]  →  Navigation Engine valida FSM
-                     →  Turing avança na fita
-                     →  A* retorna path
-                     →  [PATH_FOUND] + open/closed sets
-                     →  Animation Engine emite steps
-                     →  Zustand store atualiza
-                     →  React re-renderiza
+[GOTO target]  →  Cortex valida DFA
+               →  runAlgo retorna path
+               →  PDA empilha símbolos
+               →  TM avança na fita
+               →  [PATH] + frontier/visited
+               →  Animator emite steps
+               →  lab-store actualiza
+               →  React re-renderiza
 ```
 
 ## Ver também
 
-- `02-Core-Engine.md` — escopo da Fase 1
+- `02-Core-Engine.md` — módulos do núcleo
 - `30-Diagramas.md` — diagramas ASCII
 - `29-Decisoes-de-Arquitetura.md` — ADRs
+- `33-Estrutura-de-Diretorios.md` — árvore de ficheiros
