@@ -1,15 +1,21 @@
 import { useLab } from '../store/lab-store'
+import { profile } from '../content/profile'
 import { ViewFrame } from '../ui/ViewFrame'
-import { links } from '../content/data'
+
+function linkHref(value: string) {
+  if (value.startsWith('http')) return value
+  return `https://${value}`
+}
 
 export function ContactView() {
   const toggle = useLab((s) => s.toggleLab)
   const goto = useLab((s) => s.goto)
+  const { links } = profile
 
   const channels = [
     { label: 'email', value: links.email, href: `mailto:${links.email}` },
-    { label: 'github', value: links.github, href: `https://${links.github}` },
-    { label: 'linkedin', value: links.linkedin, href: `https://${links.linkedin}` },
+    { label: 'github', value: links.github, href: linkHref(links.github) },
+    { label: 'linkedin', value: links.linkedin, href: linkHref(links.linkedin) },
     { label: 'localização', value: links.location },
   ]
 
@@ -51,10 +57,7 @@ export function ContactView() {
         ))}
       </div>
 
-      <p>
-        Se este percurso chamou a atenção, a próxima ligação pode ser uma conversa. Escreve com
-        contexto — gosto de começar pelos problemas que valem a pena resolver.
-      </p>
+      <p>{profile.contactMessage}</p>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
         <button type="button" onClick={toggle} className="btn btn--accent">

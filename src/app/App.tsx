@@ -17,20 +17,20 @@ import { ProofView } from '../views/ProofView'
 import { ContactView } from '../views/ContactView'
 import { cortex } from '../cortex/engine'
 
-const OWNER = 'Miguel Bento'
+import { profile } from '../content/profile'
 
 const META: Record<NodeId, { title: string; description: string }> = {
-  init: { title: OWNER, description: 'Portfólio CS com CS Lab interactivo.' },
-  automata: { title: `Autômatos · ${OWNER}`, description: 'DFA, PDA e máquina de Turing.' },
-  graphs: { title: `Grafos · ${OWNER}`, description: 'Teoria de grafos e pathfinding.' },
-  algo: { title: `Algoritmos · ${OWNER}`, description: 'Dijkstra, A* e BFS.' },
-  trace: { title: `Trace · ${OWNER}`, description: 'Percurso de aprendizagem.' },
-  complexity: { title: `Complexidade · ${OWNER}`, description: 'Classes assintóticas.' },
-  repos: { title: `Repos · ${OWNER}`, description: 'Projetos e experimentos.' },
-  structures: { title: `Structures · ${OWNER}`, description: 'Competências técnicas.' },
-  memory: { title: `Memory · ${OWNER}`, description: 'Heap, stack, queue e hash.' },
-  proof: { title: `Proof · ${OWNER}`, description: 'Experiência.' },
-  io: { title: `I/O · ${OWNER}`, description: 'Contacto.' },
+  init: { title: profile.name, description: profile.metaDescription },
+  automata: { title: `Autômatos · ${profile.name}`, description: 'DFA, PDA e máquina de Turing.' },
+  graphs: { title: `Grafos · ${profile.name}`, description: 'Teoria de grafos e pathfinding.' },
+  algo: { title: `Algoritmos · ${profile.name}`, description: 'Dijkstra, A* e BFS.' },
+  trace: { title: `Trace · ${profile.name}`, description: 'Percurso de aprendizagem.' },
+  complexity: { title: `Complexidade · ${profile.name}`, description: 'Classes assintóticas.' },
+  repos: { title: `Repos · ${profile.name}`, description: 'Projetos e experimentos.' },
+  structures: { title: `Structures · ${profile.name}`, description: 'Competências técnicas.' },
+  memory: { title: `Memory · ${profile.name}`, description: 'Heap, stack, queue e hash.' },
+  proof: { title: `Proof · ${profile.name}`, description: 'Experiência.' },
+  io: { title: `I/O · ${profile.name}`, description: 'Contacto.' },
 }
 
 const VIEWS = {
@@ -61,6 +61,11 @@ export default function App() {
     document.title = m.title
     document.querySelector('meta[name="description"]')?.setAttribute('content', m.description)
   }, [node])
+
+  useEffect(() => {
+    document.title = profile.name
+    document.querySelector('meta[name="description"]')?.setAttribute('content', profile.metaDescription)
+  }, [])
 
   return (
     <div className="page">

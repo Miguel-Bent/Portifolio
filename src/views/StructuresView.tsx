@@ -1,11 +1,11 @@
+import { profile } from '../content/profile'
 import { ViewFrame } from '../ui/ViewFrame'
-import { skills } from '../content/data'
 
 export function StructuresView() {
   return (
     <ViewFrame id="structures" title="Structures" subtitle="Mapa de competências técnicas ligadas por contexto.">
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-        {skills.map((s) => (
+        {profile.skills.map((s) => (
           <div
             key={s.id}
             style={{

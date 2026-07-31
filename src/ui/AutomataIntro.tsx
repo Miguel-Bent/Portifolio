@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef, useState } from 'react'
+import { profile } from '../content/profile'
 import { useLab } from '../store/lab-store'
 import { NAV_PHASES } from '../theory/automata/dfa'
 import { BOOT_HOLD_MS, cortex } from '../cortex/engine'
@@ -92,7 +93,7 @@ export const AutomataIntro = memo(function AutomataIntro() {
         <header className="automata-hero__header">
           <p className="automata-hero__eyebrow">theorylab · boot sequence</p>
           <h1 className="automata-hero__title">
-            {booting && !isNameTape ? 'A inicializar…' : 'Miguel Bento'}
+            {booting && !isNameTape ? 'A inicializar…' : profile.name}
           </h1>
         </header>
 

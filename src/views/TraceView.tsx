@@ -1,11 +1,11 @@
+import { profile } from '../content/profile'
 import { ViewFrame } from '../ui/ViewFrame'
-import { timeline } from '../content/data'
 
 export function TraceView() {
   return (
     <ViewFrame id="trace" title="Trace" subtitle="Percurso de aprendizagem em iterações.">
       <div>
-        {timeline.map((t, i) => (
+        {profile.timeline.map((t, i) => (
           <article key={t.yr} className="timeline-item">
             <p className="timeline-item__year">{t.yr}</p>
             <div>

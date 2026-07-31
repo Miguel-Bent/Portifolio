@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { profile } from '../content/profile'
 import { useLab } from '../store/lab-store'
 import { CS_GRAPH, ALGO_META } from '../theory/graph/cs-graph'
 import { NAV_PHASES } from '../theory/automata/dfa'
@@ -78,7 +79,7 @@ export const CSLab = memo(function CSLab() {
                     color: 'var(--lab-muted)',
                   }}
                 >
-                  Miguel Bento
+                  {profile.name}
                 </p>
                 <h2
                   style={{

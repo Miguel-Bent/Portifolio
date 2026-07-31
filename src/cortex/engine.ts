@@ -7,8 +7,9 @@ import { TapeMachine } from '../theory/automata/turing'
 import { synapse } from '../synapse/bus'
 import { animator } from './animator'
 
-export const OWNER_NAME = 'MIGUEL BENTO'
-const BOOT_CHARS = OWNER_NAME.split('')
+import { profileNameBoot } from '../content/profile'
+
+const BOOT_CHARS = profileNameBoot.split('')
 export const BOOT_HOLD_MS = 10_000
 
 class Cortex {

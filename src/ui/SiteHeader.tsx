@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { profile } from '../content/profile'
 import { useLab } from '../store/lab-store'
 import { CS_GRAPH, ALGO_META } from '../theory/graph/cs-graph'
 
@@ -27,8 +28,8 @@ export const SiteHeader = memo(function SiteHeader() {
       >
         <span className="wordmark__glyph">λ</span>
         <div>
-          <span className="wordmark__name">Miguel Bento</span>
-          <span className="wordmark__tag"> · theorylab</span>
+          <span className="wordmark__name">{profile.name}</span>
+          <span className="wordmark__tag"> · {profile.siteName}</span>
         </div>
       </a>
 

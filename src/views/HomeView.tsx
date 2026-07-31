@@ -1,4 +1,5 @@
 import { useLab } from '../store/lab-store'
+import { profile } from '../content/profile'
 import { ViewFrame } from '../ui/ViewFrame'
 import { AlgoSwitcher } from '../ui/AutomataPanel'
 import { ALGO_META } from '../theory/graph/cs-graph'
@@ -11,13 +12,10 @@ export function HomeView() {
   return (
     <ViewFrame
       id="init"
-      title="Theorylab"
-      subtitle="Portfólio e laboratório de Ciência da Computação — grafos, autômatos e pathfinding em tempo real."
+      title={profile.siteName}
+      subtitle={`${profile.headline} — grafos, autômatos e pathfinding em tempo real.`}
     >
-      <p>
-        Cada módulo é um nó num grafo. Cada transição corre um algoritmo de pathfinding real —
-        Dijkstra, A* ou BFS — com três autômatos a observar o processo em paralelo.
-      </p>
+      <p>{profile.bio}</p>
 
       <div className="card" style={{ padding: '1.5rem' }}>
         <p className="card__tag">algorithm arena</p>
@@ -44,8 +42,8 @@ export function HomeView() {
       <div className="grid-3" style={{ marginTop: '1rem' }}>
         {[
           { sym: 'G', label: 'Grafos', desc: '3 algoritmos comparáveis' },
-          { sym: 'T', label: 'Trace', desc: 'Percurso de aprendizagem' },
-          { sym: 'Ω', label: 'I/O', desc: 'Contacto e links' },
+          { sym: 'T', label: 'Trace', desc: profile.headline },
+          { sym: 'Ω', label: 'I/O', desc: profile.links.location },
         ].map((m) => (
           <div key={m.sym} className="card">
             <p className="card__tag">{m.sym}</p>
