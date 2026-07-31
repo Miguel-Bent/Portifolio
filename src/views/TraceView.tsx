@@ -4,7 +4,7 @@ import { ViewFrame } from '../ui/ViewFrame'
 
 export function TraceView() {
   return (
-    <ViewFrame id="trace" title="Trace" subtitle="Percurso real — formação, projetos e marcos até ao TheoryLab.">
+    <ViewFrame id="trace" title="Trace" subtitle="Estágios, lançamentos e marcos — uma linha temporal, sem repetir o CV.">
       <div>
         {profile.timeline.map((t, i) => (
           <article

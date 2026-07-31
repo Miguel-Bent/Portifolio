@@ -7,13 +7,13 @@ import type { Profile } from './types'
 export const profile: Profile = {
   name: 'Miguel Bento',
   siteName: 'theorylab',
-  headline: 'Estudante de Engenharia e Ciência dos Computadores · ISUTC',
-  role: 'Estudante de Engenharia e Ciência dos Computadores · ISUTC',
-  bio: 'Estudante na ISUTC com experiência em desenvolvimento web, WordPress e suporte técnico. Especializado em projetos full-stack em produção — de e-commerce a apps PWA — com base sólida em redes, hardware e trabalho em equipa.',
+  headline: 'Full Stack · Next.js, NestJS, PostgreSQL · WordPress',
+  role: 'Full Stack Developer',
+  bio: 'Construo apps e sites em produção — do checkout por WhatsApp ao PWA offline que ganhou um hackathon. Stack habitual: Next.js, TypeScript, Tailwind, NestJS, Prisma e PostgreSQL; também WordPress (migrações, Elementor) e Express em clientes reais. Uso IA no fluxo para prototipar e depurar mais depressa. Licenciatura em Engenharia e Ciência dos Computadores, ISUTC (desde Fev 2025).',
   contactMessage:
-    'Se este percurso chamou a atenção, escreve-me ou liga. Gosto de começar pelos problemas que valem a pena resolver.',
+    'Se algum destes projetos ou demos te interessou, escreve-me. Gosto de resolver problemas com código deployado, não só slides.',
   metaDescription:
-    'Miguel Bento — Engenharia e Ciência dos Computadores (ISUTC, Maputo). Desenvolvimento web, WordPress e projetos full-stack.',
+    'Miguel Bento — Full Stack Developer. Projetos em produção: AjudaCheia, Your Glow, Finanças Pessoais, BioBantu. Maputo.',
 
   links: {
     email: 'miguelbento012@gmail.com',
@@ -28,38 +28,6 @@ export const profile: Profile = {
     { name: 'Inglês', level: 'Intermediário' },
   ],
 
-  softSkills: [
-    'Inteligência emocional',
-    'Comunicação assertiva',
-    'Proatividade na resolução de problemas',
-    'Trabalho colaborativo em equipas multidisciplinares',
-  ],
-
-  education: [
-    {
-      school: 'ISUTC — Instituto Superior de Transportes e Comunicações',
-      degree: 'Licenciatura em Engenharia e Ciência dos Computadores',
-      when: 'Fev 2025 —',
-      text: 'Em curso, Maputo.',
-    },
-    {
-      school: 'ISUTC / ITC',
-      degree: 'Certificação em Programação de Aplicações Web',
-      when: '2023 — 2024',
-    },
-    {
-      school: 'ISUTC / ITC',
-      degree: 'Certificação em Suporte Informático',
-      when: '2022 — 2023',
-    },
-    {
-      school: 'ISUTC / ITC',
-      degree: 'Certificação em Eletricidade Industrial',
-      when: '2021 — 2022',
-      text: 'Quadros de distribuição, controladores lógicos e instalações em baixa tensão.',
-    },
-  ],
-
   timeline: [
     {
       yr: 'Nov 2023',
@@ -70,11 +38,6 @@ export const profile: Profile = {
       yr: 'Nov 2024',
       title: 'Estágio · CIUEM',
       text: 'Migração Joomla → WordPress, desenvolvimento com Elementor, SmartSlider e Mega Menu. Protótipos em Figma e Adobe XD.',
-    },
-    {
-      yr: 'Fev 2025',
-      title: 'ISUTC · Engenharia e Ciência dos Computadores',
-      text: 'Início da licenciatura em Fevereiro de 2025, em Maputo.',
     },
     {
       yr: '30 Mai 2026',
@@ -105,47 +68,14 @@ export const profile: Profile = {
     },
   ],
 
-  experience: [
-    {
-      role: 'Vencedor · Hackathon',
-      org: 'The Pseudocoders — bitAfrica × Cursor',
-      when: '04 Jul 2026',
-      text: 'Primeiro hackathon com a equipa The Pseudocoders. Vitória na categoria SOS/Reunião com AjudaCheia — app mobile-first, PWA offline e fluxos de SOS, voluntariado e reencontro familiar.',
-      featured: true,
-      award: 'The Pseudocoders',
-    },
-    {
-      role: 'Desenvolvedor Web',
-      org: 'Projetos pessoais e clientes',
-      when: '2026 —',
-      text: 'Your Glow, Finanças Pessoais, BioBantu, AjudaCheia e TheoryLab — sites e apps full-stack em produção.',
-    },
-    {
-      role: 'Estudante',
-      org: 'ISUTC · Engenharia e Ciência dos Computadores',
-      when: 'Fev 2025 —',
-      text: 'Licenciatura em curso, Maputo.',
-    },
-    {
-      role: 'Estágio · Programação Web',
-      org: 'CIUEM',
-      when: 'Nov 2024 — Fev 2025',
-      text: 'Migração de plataformas Joomla para WordPress. Elementor, SmartSlider, Mega Menu. Protótipos em Figma e Adobe XD. Capacitação da equipa em CMS.',
-    },
-    {
-      role: 'Estágio · Suporte Informático',
-      org: 'Electricidade de Moçambique, E.P.',
-      when: 'Nov 2023 — Jan 2024',
-      text: 'Manutenção preventiva e corretiva de hardware e software. Redes LAN, Wi-Fi e servidores. Suporte ao utilizador e instalação de sistemas operativos.',
-    },
-  ],
-
   projects: [
     {
       id: 'financas',
       name: 'Gestão Financeira Pessoal',
       tags: ['React', 'Vite', 'Node.js', 'PostgreSQL', 'Prisma'],
       desc: 'App full-stack para registar, analisar e planear finanças pessoais e de negócio — autenticação JWT, orçamentos, importação CSV/Excel, exportação PDF, espaços Pessoal | Negócio e dark mode.',
+      technical:
+        'Separação Vercel/Railway; refresh tokens com rotação; soft delete na lixeira; rate limiting por rota; CI com GitHub Actions.',
       status: 'live',
       url: 'financas-pessoais-nine-self.vercel.app',
       repo: 'github.com/Miguel-Bent/financas_pessoais',
@@ -155,6 +85,8 @@ export const profile: Profile = {
       name: 'Your Glow',
       tags: ['Node.js', 'Express', 'PostgreSQL', 'E-commerce'],
       desc: 'Loja de skincare e autocuidado em Maputo. O cliente monta o carrinho no site e fecha por WhatsApp; painel admin para catálogo, cupões e pedidos.',
+      technical:
+        'Checkout sem gateway — pedido serializado para WhatsApp; API REST para catálogo e admin; PostgreSQL como fonte única de verdade.',
       status: 'live',
       url: 'yourglow.me',
     },
@@ -163,6 +95,8 @@ export const profile: Profile = {
       name: 'BioBantu Platform',
       tags: ['Next.js', 'TypeScript', 'Tailwind CSS'],
       desc: 'Plataforma institucional modular para a BioBantu-258 — bioinsumos, agricultura sustentável e inovação agroindustrial em Moçambique. MVP com website público e roadmap API-first.',
+      technical:
+        'App Router Next.js; componentes reutilizáveis para secções institucionais; estrutura preparada para módulos futuros (catálogo, parceiros).',
       status: 'live',
       url: 'biobantu.vercel.app',
     },
@@ -171,6 +105,8 @@ export const profile: Profile = {
       name: 'AjudaCheia',
       tags: ['PWA', 'React', 'Mobile-first', 'The Pseudocoders', 'bitAfrica', 'Cursor'],
       desc: 'O meu primeiro hackathon com a equipa The Pseudocoders — Cursor Hackathon da bitAfrica, onde ganhámos. App mobile-first de resposta às cheias em Moçambique: SOS, rede de voluntários, reencontro familiar e modo offline.',
+      technical:
+        'Sem mapas nem libs pesadas — localStorage para persistência offline; fluxos SOS/voluntário/reencontro desenhados para rede instável; PWA instalável com cache e indicador de ligação.',
       status: 'live',
       url: 'ajuda-cheia.vercel.app',
       featured: true,
@@ -181,34 +117,38 @@ export const profile: Profile = {
       name: 'TheoryLab',
       tags: ['TypeScript', 'React', 'Vite', 'Zustand', 'Framer Motion'],
       desc: 'Este portfólio — grafo de 11 nós, pathfinding (Dijkstra, A*, BFS), autômatos DFA/PDA/TM, CS Lab e revelação progressiva do mapa.',
+      technical:
+        'Grafo como fonte de navegação; arestas reveladas à medida que visitas nós; estado global Zustand; views desacopladas por módulo CS.',
       status: 'wip',
     },
   ],
 
   skills: [
-    { id: 'js', name: 'JavaScript', lvl: 4, links: ['ts', 'php', 'react'] },
-    { id: 'ts', name: 'TypeScript', lvl: 4, links: ['js', 'react', 'node'] },
-    { id: 'java', name: 'Java', lvl: 3, links: ['js'] },
-    { id: 'php', name: 'PHP', lvl: 4, links: ['wordpress', 'sql'] },
-    { id: 'react', name: 'React', lvl: 4, links: ['ts', 'js', 'vite'] },
-    { id: 'next', name: 'Next.js', lvl: 3, links: ['react', 'ts'] },
-    { id: 'wordpress', name: 'WordPress', lvl: 4, links: ['php', 'htmlcss'] },
-    { id: 'htmlcss', name: 'HTML / CSS', lvl: 4, links: ['js', 'wordpress', 'tailwind'] },
-    { id: 'node', name: 'Node.js', lvl: 4, links: ['express', 'ts'] },
-    { id: 'express', name: 'Express', lvl: 4, links: ['node', 'postgres'] },
-    { id: 'sql', name: 'SQL', lvl: 4, links: ['postgres', 'prisma'] },
-    { id: 'postgres', name: 'PostgreSQL', lvl: 4, links: ['sql', 'prisma', 'node'] },
-    { id: 'prisma', name: 'Prisma', lvl: 3, links: ['postgres', 'node'] },
-    { id: 'vite', name: 'Vite', lvl: 4, links: ['react', 'ts'] },
-    { id: 'tailwind', name: 'Tailwind CSS', lvl: 4, links: ['react', 'htmlcss'] },
-    { id: 'figma', name: 'Figma', lvl: 3, links: ['xd', 'htmlcss'] },
-    { id: 'xd', name: 'Adobe XD', lvl: 3, links: ['figma'] },
-    { id: 'git', name: 'Git / GitHub', lvl: 4, links: ['vercel', 'railway'] },
-    { id: 'vercel', name: 'Vercel', lvl: 4, links: ['react', 'next'] },
-    { id: 'railway', name: 'Railway', lvl: 3, links: ['node', 'postgres'] },
-    { id: 'pwa', name: 'PWA / Offline', lvl: 3, links: ['react', 'js'] },
-    { id: 'networks', name: 'Redes & Infraestrutura', lvl: 3, links: ['hardware'] },
-    { id: 'hardware', name: 'Hardware & Suporte TI', lvl: 3, links: ['networks'] },
+    { id: 'next', name: 'Next.js', links: ['react', 'ts', 'tailwind'] },
+    { id: 'postgres', name: 'PostgreSQL', links: ['sql', 'prisma', 'nestjs'] },
+    { id: 'nestjs', name: 'NestJS / TypeScript', links: ['ts', 'postgres', 'prisma'] },
+    { id: 'wordpress', name: 'WordPress', links: ['php', 'htmlcss'] },
+    { id: 'ts', name: 'TypeScript', links: ['js', 'next', 'nestjs'] },
+    { id: 'react', name: 'React', links: ['ts', 'next', 'vite'] },
+    { id: 'tailwind', name: 'Tailwind CSS', links: ['next', 'htmlcss'] },
+    { id: 'prisma', name: 'Prisma', links: ['postgres', 'nestjs', 'node'] },
+    { id: 'strapi', name: 'Strapi CMS', links: ['next', 'postgres'] },
+    { id: 'node', name: 'Node.js', links: ['express', 'nestjs', 'ts'] },
+    { id: 'express', name: 'Express', links: ['node', 'postgres'] },
+    { id: 'js', name: 'JavaScript', links: ['ts', 'php', 'react'] },
+    { id: 'php', name: 'PHP', links: ['wordpress', 'sql'] },
+    { id: 'java', name: 'Java', links: ['js'] },
+    { id: 'sql', name: 'SQL', links: ['postgres', 'prisma'] },
+    { id: 'htmlcss', name: 'HTML / CSS', links: ['tailwind', 'wordpress'] },
+    { id: 'vite', name: 'Vite', links: ['react', 'ts'] },
+    { id: 'figma', name: 'Figma', links: ['xd', 'htmlcss'] },
+    { id: 'xd', name: 'Adobe XD', links: ['figma'] },
+    { id: 'networks', name: 'Redes & Infraestrutura', links: ['hardware'] },
+    { id: 'hardware', name: 'Suporte Técnico / Hardware', links: ['networks'] },
+    { id: 'pwa', name: 'PWA / Offline', links: ['react', 'js'] },
+    { id: 'git', name: 'Git / GitHub', links: ['vercel', 'railway'] },
+    { id: 'vercel', name: 'Vercel', links: ['next', 'react'] },
+    { id: 'railway', name: 'Railway', links: ['node', 'postgres'] },
   ],
 }
 

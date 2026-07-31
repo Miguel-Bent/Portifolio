@@ -24,12 +24,12 @@ const META: Record<NodeId, { title: string; description: string }> = {
   automata: { title: `Autômatos · ${profile.name}`, description: 'DFA, PDA e máquina de Turing.' },
   graphs: { title: `Grafos · ${profile.name}`, description: 'Teoria de grafos e pathfinding.' },
   algo: { title: `Algoritmos · ${profile.name}`, description: 'Dijkstra, A* e BFS.' },
-  trace: { title: `Trace · ${profile.name}`, description: 'Percurso de aprendizagem.' },
+  trace: { title: `Trace · ${profile.name}`, description: 'Linha temporal — estágios e lançamentos.' },
   complexity: { title: `Complexidade · ${profile.name}`, description: 'Classes assintóticas.' },
   repos: { title: `Repos · ${profile.name}`, description: 'Projetos e experimentos.' },
-  structures: { title: `Structures · ${profile.name}`, description: 'Competências técnicas.' },
+  structures: { title: `Structures · ${profile.name}`, description: 'Stack dos projetos.' },
   memory: { title: `Memory · ${profile.name}`, description: 'Heap, stack, queue e hash.' },
-  proof: { title: `Proof · ${profile.name}`, description: 'Experiência.' },
+  proof: { title: `Proof · ${profile.name}`, description: 'Projetos em produção e destaques.' },
   io: { title: `I/O · ${profile.name}`, description: 'Contacto.' },
 }
 

@@ -68,6 +68,19 @@ export function ReposView() {
                 )}
               </h2>
               <p style={{ marginTop: '0.5rem', flex: 1 }}>{p.desc}</p>
+              {p.technical && (
+                <p
+                  style={{
+                    marginTop: '0.75rem',
+                    fontFamily: 'var(--mono)',
+                    fontSize: '0.65rem',
+                    color: 'var(--text-soft)',
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {p.technical}
+                </p>
+              )}
               {(p.url || p.repo) && (
                 <p
                   style={{

@@ -9,25 +9,9 @@ export interface ProfileLinks {
   website?: string
 }
 
-export interface EducationEntry {
-  school: string
-  degree: string
-  when: string
-  text?: string
-}
-
 export interface TimelineEntry {
   yr: string
   title: string
-  text: string
-  featured?: boolean
-  award?: string
-}
-
-export interface ExperienceEntry {
-  role: string
-  org: string
-  when: string
   text: string
   featured?: boolean
   award?: string
@@ -38,6 +22,7 @@ export interface ProjectEntry {
   name: string
   tags: string[]
   desc: string
+  technical?: string
   status: ProjectStatus
   url?: string
   repo?: string
@@ -48,7 +33,6 @@ export interface ProjectEntry {
 export interface SkillEntry {
   id: string
   name: string
-  lvl: 1 | 2 | 3 | 4 | 5
   links: string[]
 }
 
@@ -67,10 +51,7 @@ export interface Profile {
   metaDescription: string
   links: ProfileLinks
   languages: LanguageEntry[]
-  softSkills: string[]
-  education: EducationEntry[]
   timeline: TimelineEntry[]
-  experience: ExperienceEntry[]
   projects: ProjectEntry[]
   skills: SkillEntry[]
 }

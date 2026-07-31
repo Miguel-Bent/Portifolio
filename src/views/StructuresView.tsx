@@ -6,73 +6,38 @@ export function StructuresView() {
     <ViewFrame
       id="structures"
       title="Structures"
-      subtitle="Competências técnicas do CV (Dez 2024) + stack dos projetos em produção."
+      subtitle="Tecnologias que aparecem nos projetos — sem auto-avaliação, a prova está nos repos."
     >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+        }}
+      >
         {profile.skills.map((s) => (
-          <div
+          <span
             key={s.id}
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr auto',
-              gap: '1rem',
-              alignItems: 'center',
-              padding: '1rem 0',
-              borderBottom: '1px solid var(--border-soft)',
+              fontFamily: 'var(--mono)',
+              fontSize: '0.7rem',
+              padding: '0.4rem 0.75rem',
+              borderRadius: 'var(--radius-sm)',
+              border: '1px solid var(--border-soft)',
+              color: 'var(--text-soft)',
+              background: 'var(--surface)',
             }}
           >
-            <div>
-              <p style={{ fontWeight: 500, color: 'var(--text)' }}>{s.name}</p>
-              <p
-                style={{
-                  marginTop: '0.25rem',
-                  fontFamily: 'var(--mono)',
-                  fontSize: '0.6rem',
-                  color: 'var(--text-muted)',
-                }}
-              >
-                {s.links.join(' → ')}
-              </p>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', minWidth: '8rem' }}>
-              <div className="skill-bar" style={{ flex: 1, width: '5rem' }}>
-                <div className="skill-bar__fill" style={{ width: `${(s.lvl / 5) * 100}%` }} />
-              </div>
-              <span
-                style={{
-                  fontFamily: 'var(--mono)',
-                  fontSize: '0.65rem',
-                  color: 'var(--accent)',
-                }}
-              >
-                {s.lvl}/5
-              </span>
-            </div>
-          </div>
+            {s.name}
+          </span>
         ))}
       </div>
 
-      <div className="grid-2" style={{ marginTop: '2rem' }}>
-        <div className="card">
-          <p className="card__tag">idiomas</p>
-          <ul style={{ margin: '0.75rem 0 0', paddingLeft: '1.1rem', color: 'var(--text-soft)' }}>
-            {profile.languages.map((lang) => (
-              <li key={lang.name} style={{ marginBottom: '0.35rem' }}>
-                <strong style={{ color: 'var(--text)' }}>{lang.name}</strong> — {lang.level}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="card">
-          <p className="card__tag">soft skills</p>
-          <ul style={{ margin: '0.75rem 0 0', paddingLeft: '1.1rem', color: 'var(--text-soft)' }}>
-            {profile.softSkills.map((skill) => (
-              <li key={skill} style={{ marginBottom: '0.35rem' }}>
-                {skill}
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="card" style={{ marginTop: '2rem' }}>
+        <p className="card__tag">idiomas</p>
+        <p style={{ marginTop: '0.75rem', color: 'var(--text-soft)' }}>
+          {profile.languages.map((lang) => `${lang.name} (${lang.level})`).join(' · ')}
+        </p>
       </div>
     </ViewFrame>
   )
