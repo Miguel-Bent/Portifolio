@@ -3,7 +3,11 @@ import { ViewFrame } from '../ui/ViewFrame'
 
 export function StructuresView() {
   return (
-    <ViewFrame id="structures" title="Structures" subtitle="Mapa de competências técnicas ligadas por contexto.">
+    <ViewFrame
+      id="structures"
+      title="Structures"
+      subtitle="Competências técnicas do CV (Dez 2024) + stack dos projetos em produção."
+    >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
         {profile.skills.map((s) => (
           <div
@@ -46,6 +50,29 @@ export function StructuresView() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="grid-2" style={{ marginTop: '2rem' }}>
+        <div className="card">
+          <p className="card__tag">idiomas</p>
+          <ul style={{ margin: '0.75rem 0 0', paddingLeft: '1.1rem', color: 'var(--text-soft)' }}>
+            {profile.languages.map((lang) => (
+              <li key={lang.name} style={{ marginBottom: '0.35rem' }}>
+                <strong style={{ color: 'var(--text)' }}>{lang.name}</strong> — {lang.level}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="card">
+          <p className="card__tag">soft skills</p>
+          <ul style={{ margin: '0.75rem 0 0', paddingLeft: '1.1rem', color: 'var(--text-soft)' }}>
+            {profile.softSkills.map((skill) => (
+              <li key={skill} style={{ marginBottom: '0.35rem' }}>
+                {skill}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </ViewFrame>
   )

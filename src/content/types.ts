@@ -5,6 +5,7 @@ export interface ProfileLinks {
   github: string
   linkedin: string
   location: string
+  phone?: string
   website?: string
 }
 
@@ -19,6 +20,8 @@ export interface TimelineEntry {
   yr: string
   title: string
   text: string
+  featured?: boolean
+  award?: string
 }
 
 export interface ExperienceEntry {
@@ -26,6 +29,8 @@ export interface ExperienceEntry {
   org: string
   when: string
   text: string
+  featured?: boolean
+  award?: string
 }
 
 export interface ProjectEntry {
@@ -36,6 +41,8 @@ export interface ProjectEntry {
   status: ProjectStatus
   url?: string
   repo?: string
+  featured?: boolean
+  award?: string
 }
 
 export interface SkillEntry {
@@ -43,6 +50,11 @@ export interface SkillEntry {
   name: string
   lvl: 1 | 2 | 3 | 4 | 5
   links: string[]
+}
+
+export interface LanguageEntry {
+  name: string
+  level: string
 }
 
 export interface Profile {
@@ -54,6 +66,8 @@ export interface Profile {
   contactMessage: string
   metaDescription: string
   links: ProfileLinks
+  languages: LanguageEntry[]
+  softSkills: string[]
   education: EducationEntry[]
   timeline: TimelineEntry[]
   experience: ExperienceEntry[]

@@ -2,6 +2,7 @@ export { profile, profileNameBoot } from './profile'
 export type {
   EducationEntry,
   ExperienceEntry,
+  LanguageEntry,
   Profile,
   ProfileLinks,
   ProjectEntry,

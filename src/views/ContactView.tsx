@@ -14,6 +14,9 @@ export function ContactView() {
 
   const channels = [
     { label: 'email', value: links.email, href: `mailto:${links.email}` },
+    ...(links.phone
+      ? [{ label: 'telefone', value: links.phone, href: `tel:${links.phone.replace(/\s/g, '')}` }]
+      : []),
     { label: 'github', value: links.github, href: linkHref(links.github) },
     { label: 'linkedin', value: links.linkedin, href: linkHref(links.linkedin) },
     { label: 'localização', value: links.location },
@@ -28,8 +31,8 @@ export function ContactView() {
             {c.href ? (
               <a
                 href={c.href}
-                target={c.label !== 'email' ? '_blank' : undefined}
-                rel={c.label !== 'email' ? 'noopener noreferrer' : undefined}
+                target={c.label !== 'email' && c.label !== 'telefone' ? '_blank' : undefined}
+                rel={c.label !== 'email' && c.label !== 'telefone' ? 'noopener noreferrer' : undefined}
                 style={{
                   display: 'block',
                   marginTop: '0.5rem',
