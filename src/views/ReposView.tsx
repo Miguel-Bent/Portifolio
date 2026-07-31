@@ -8,6 +8,38 @@ function projectHref(p: (typeof profile.projects)[number]) {
   return undefined
 }
 
+function ProjectShot({
+  project: p,
+  href,
+}: {
+  project: (typeof profile.projects)[number]
+  href?: string
+}) {
+  if (!p.image) return null
+
+  const img = (
+    <img
+      src={p.image}
+      alt={p.imageAlt ?? `Captura de ${p.name}`}
+      className="repo-card__img"
+      loading="lazy"
+      decoding="async"
+    />
+  )
+
+  return (
+    <div className="repo-card__media">
+      {href ? (
+        <a href={href} target="_blank" rel="noopener noreferrer" className="repo-card__media-link">
+          {img}
+        </a>
+      ) : (
+        img
+      )}
+    </div>
+  )
+}
+
 export function ReposView() {
   const projects = [...profile.projects].sort((a, b) => Number(b.featured) - Number(a.featured))
 
@@ -23,106 +55,117 @@ export function ReposView() {
           return (
             <article
               key={p.id}
-              className={['card', p.featured ? 'card--featured' : ''].filter(Boolean).join(' ')}
-              style={{ display: 'flex', flexDirection: 'column' }}
+              className={['card repo-card', p.featured ? 'card--featured' : ''].filter(Boolean).join(' ')}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
-                <p className="card__tag">repo {String(i + 1).padStart(2, '0')}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                  {p.featured && <FeaturedBadge label={p.award ?? 'Vencedor'} />}
-                  <span
-                    className={[
-                      'status-badge--live',
-                      p.featured ? 'status-badge--featured' : '',
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
+              <ProjectShot project={p} href={href} />
+
+              <div className="repo-card__body">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                  <p className="card__tag">repo {String(i + 1).padStart(2, '0')}</p>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      flexWrap: 'wrap',
+                      justifyContent: 'flex-end',
+                    }}
                   >
-                    {p.status}
-                  </span>
+                    {p.featured && <FeaturedBadge label={p.award ?? 'Vencedor'} />}
+                    <span
+                      className={['status-badge--live', p.featured ? 'status-badge--featured' : '']
+                        .filter(Boolean)
+                        .join(' ')}
+                    >
+                      {p.status}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <h2
-                className="card__title"
-                style={{
-                  fontSize: '1.4rem',
-                  color: p.featured ? 'var(--gold-bright)' : undefined,
-                }}
-              >
-                {p.featured && (
-                  <span className="featured-badge__crown" style={{ marginRight: '0.35rem' }} aria-hidden>
-                    👑
-                  </span>
-                )}
-                {href ? (
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: 'inherit', textDecoration: 'none' }}
+                <h2
+                  className="card__title"
+                  style={{
+                    fontSize: '1.4rem',
+                    color: p.featured ? 'var(--gold-bright)' : undefined,
+                  }}
+                >
+                  {p.featured && (
+                    <span className="featured-badge__crown" style={{ marginRight: '0.35rem' }} aria-hidden>
+                      👑
+                    </span>
+                  )}
+                  {href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: 'inherit', textDecoration: 'none' }}
+                    >
+                      {p.name} ↗
+                    </a>
+                  ) : (
+                    p.name
+                  )}
+                </h2>
+                <p style={{ marginTop: '0.5rem', flex: 1 }}>{p.desc}</p>
+                {p.technical && (
+                  <p
+                    style={{
+                      marginTop: '0.75rem',
+                      fontFamily: 'var(--mono)',
+                      fontSize: '0.65rem',
+                      color: 'var(--text-soft)',
+                      lineHeight: 1.55,
+                    }}
                   >
-                    {p.name} ↗
-                  </a>
-                ) : (
-                  p.name
+                    {p.technical}
+                  </p>
                 )}
-              </h2>
-              <p style={{ marginTop: '0.5rem', flex: 1 }}>{p.desc}</p>
-              {p.technical && (
+                {(p.url || p.repo) && (
+                  <p
+                    style={{
+                      marginTop: '0.75rem',
+                      fontFamily: 'var(--mono)',
+                      fontSize: '0.6rem',
+                      color: 'var(--text-soft)',
+                    }}
+                  >
+                    {p.url && (
+                      <a
+                        href={p.url.startsWith('http') ? p.url : `https://${p.url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: p.featured ? 'var(--gold-bright)' : 'var(--accent)',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        {p.url.replace(/^https?:\/\//, '')}
+                      </a>
+                    )}
+                    {p.url && p.repo && ' · '}
+                    {p.repo && (
+                      <a
+                        href={p.repo.startsWith('http') ? p.repo : `https://${p.repo}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: 'var(--text-muted)', textDecoration: 'none' }}
+                      >
+                        {p.repo.replace(/^https?:\/\//, '')}
+                      </a>
+                    )}
+                  </p>
+                )}
                 <p
                   style={{
-                    marginTop: '0.75rem',
+                    marginTop: '1rem',
                     fontFamily: 'var(--mono)',
                     fontSize: '0.65rem',
-                    color: 'var(--text-soft)',
-                    lineHeight: 1.55,
+                    color: 'var(--text-muted)',
                   }}
                 >
-                  {p.technical}
+                  {p.tags.join(' · ')}
                 </p>
-              )}
-              {(p.url || p.repo) && (
-                <p
-                  style={{
-                    marginTop: '0.75rem',
-                    fontFamily: 'var(--mono)',
-                    fontSize: '0.6rem',
-                    color: 'var(--text-soft)',
-                  }}
-                >
-                  {p.url && (
-                    <a
-                      href={p.url.startsWith('http') ? p.url : `https://${p.url}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: p.featured ? 'var(--gold-bright)' : 'var(--accent)', textDecoration: 'none' }}
-                    >
-                      {p.url.replace(/^https?:\/\//, '')}
-                    </a>
-                  )}
-                  {p.url && p.repo && ' · '}
-                  {p.repo && (
-                    <a
-                      href={p.repo.startsWith('http') ? p.repo : `https://${p.repo}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: 'var(--text-muted)', textDecoration: 'none' }}
-                    >
-                      {p.repo.replace(/^https?:\/\//, '')}
-                    </a>
-                  )}
-                </p>
-              )}
-              <p
-                style={{
-                  marginTop: '1rem',
-                  fontFamily: 'var(--mono)',
-                  fontSize: '0.65rem',
-                  color: 'var(--text-muted)',
-                }}
-              >
-                {p.tags.join(' · ')}
-              </p>
+              </div>
             </article>
           )
         })}

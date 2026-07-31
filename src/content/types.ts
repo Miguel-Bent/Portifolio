@@ -26,6 +26,8 @@ export interface ProjectEntry {
   status: ProjectStatus
   url?: string
   repo?: string
+  image?: string
+  imageAlt?: string
   featured?: boolean
   award?: string
 }

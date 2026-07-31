@@ -89,6 +89,8 @@ export const profile: Profile = {
         'Checkout sem gateway — pedido serializado para WhatsApp; API REST para catálogo e admin; PostgreSQL como fonte única de verdade.',
       status: 'live',
       url: 'yourglow.me',
+      image: '/projects/yourglow.png',
+      imageAlt: 'Captura do site Your Glow — loja de skincare em Maputo',
     },
     {
       id: 'biobantu',
@@ -99,6 +101,8 @@ export const profile: Profile = {
         'App Router Next.js; componentes reutilizáveis para secções institucionais; estrutura preparada para módulos futuros (catálogo, parceiros).',
       status: 'live',
       url: 'biobantu.vercel.app',
+      image: '/projects/biobantu.png',
+      imageAlt: 'Captura do site BioBantu Platform',
     },
     {
       id: 'ajudacheia',
@@ -109,6 +113,8 @@ export const profile: Profile = {
         'Sem mapas nem libs pesadas — localStorage para persistência offline; fluxos SOS/voluntário/reencontro desenhados para rede instável; PWA instalável com cache e indicador de ligação.',
       status: 'live',
       url: 'ajuda-cheia.vercel.app',
+      image: '/projects/ajudacheia.png',
+      imageAlt: 'Captura do app AjudaCheia — SOS e voluntariado em cheias',
       featured: true,
       award: 'The Pseudocoders',
     },

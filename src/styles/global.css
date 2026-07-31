@@ -844,6 +844,51 @@ html {
   color: var(--gold-bright);
 }
 
+.repo-card {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.repo-card__media {
+  aspect-ratio: 16 / 10;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.repo-card--featured .repo-card__media,
+.card--featured.repo-card .repo-card__media {
+  border-bottom-color: rgba(255, 193, 74, 0.25);
+}
+
+.repo-card__media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.repo-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.repo-card__media-link:hover .repo-card__img {
+  transform: scale(1.02);
+}
+
+.repo-card__body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .featured-badge {
   display: inline-flex;
   align-items: center;
