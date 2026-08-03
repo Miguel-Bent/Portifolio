@@ -10,7 +10,7 @@ import { animator } from './animator'
 import { profileNameBoot } from '../content/profile'
 
 const BOOT_CHARS = profileNameBoot.split('')
-export const BOOT_HOLD_MS = 10_000
+export const BOOT_HOLD_MS = 2_000
 
 class Cortex {
   private dfa = new NavDfa()
