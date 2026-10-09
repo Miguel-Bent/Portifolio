@@ -145,10 +145,13 @@ export function useScrollNavigation(slideRef: RefObject<HTMLElement | null>, nod
       if (window.scrollY < minY) window.scrollTo(0, minY)
     }
 
+    // Não usa slideRef: o AnimatePresence põe o ref a null quando o slide
+    // antigo sai, e o scroll para cima ficava bloqueado dentro das secções.
+    const viewport = site.querySelector('.graph-viewport')
+
     const blockHeroWheel = (e: WheelEvent) => {
       if (!useLab.getState().introPassed) return
-      const slide = slideRef.current
-      if (slide?.contains(e.target as Node)) return
+      if (viewport?.contains(e.target as Node)) return
       if (window.scrollY <= site.offsetTop + 2 && e.deltaY < 0) e.preventDefault()
     }
 
@@ -158,5 +161,5 @@ export function useScrollNavigation(slideRef: RefObject<HTMLElement | null>, nod
       window.removeEventListener('scroll', lockWindow)
       window.removeEventListener('wheel', blockHeroWheel)
     }
-  }, [slideRef])
+  }, [])
 }
