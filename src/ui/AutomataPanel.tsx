@@ -4,6 +4,8 @@ import { NAV_PHASES } from '../theory/automata/dfa'
 import { ALGO_META } from '../theory/graph/cs-graph'
 import type { AlgoId } from '../theory/types'
 
+const ALGOS: AlgoId[] = ['dijkstra', 'astar', 'bfs']
+
 export const AlgoSwitcher = memo(function AlgoSwitcher() {
   const algo = useLab((s) => s.algo)
   const phase = useLab((s) => s.phase)
@@ -11,27 +13,16 @@ export const AlgoSwitcher = memo(function AlgoSwitcher() {
   const busy = phase !== 'idle'
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }} role="group" aria-label="Algoritmo">
-      {(['dijkstra', 'astar', 'bfs'] as AlgoId[]).map((a) => (
+    <div className="algo-switcher" role="group" aria-label="Algoritmo">
+      {ALGOS.map((a) => (
         <button
           key={a}
           type="button"
           disabled={busy}
           onClick={() => setAlgo(a)}
           title={ALGO_META[a].desc}
-          style={{
-            padding: '0.4rem 0.75rem',
-            borderRadius: '6px',
-            border: `1px solid ${algo === a ? 'var(--accent)' : 'var(--border)'}`,
-            background: algo === a ? 'var(--accent-glow)' : 'transparent',
-            color: algo === a ? 'var(--accent)' : 'var(--text-muted)',
-            fontFamily: 'var(--mono)',
-            fontSize: '0.6rem',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            opacity: busy ? 0.4 : 1,
-            transition: 'all 0.2s ease',
-          }}
+          aria-pressed={algo === a}
+          className="algo-switcher__btn"
         >
           {ALGO_META[a].name}
         </button>
@@ -46,21 +37,11 @@ export const AutomataPanel = memo(function AutomataPanel() {
   const tm = useLab((s) => s.tm)
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.75rem' }}>
-      <Cell title="DFA" sub="navigation fsm">
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
+    <div className="automata-panel">
+      <Cell title="DFA" sub="fases da navegação">
+        <div className="automata-panel__row">
           {NAV_PHASES.map((p) => (
-            <span
-              key={p}
-              style={{
-                padding: '0.15rem 0.4rem',
-                fontSize: '0.55rem',
-                textTransform: 'uppercase',
-                borderRadius: '3px',
-                background: p === dfa.state ? 'var(--lab-accent)' : 'transparent',
-                color: p === dfa.state ? 'var(--lab-bg)' : 'var(--lab-muted)',
-              }}
-            >
+            <span key={p} className={p === dfa.state ? 'lab-chip lab-chip--on' : 'lab-chip'}>
               {p}
             </span>
           ))}
@@ -68,24 +49,13 @@ export const AutomataPanel = memo(function AutomataPanel() {
       </Cell>
 
       <Cell title="PDA" sub={`stack · ${pda.state}`}>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px' }}>
+        <div className="automata-panel__stack">
           {pda.stack.length === 0 ? (
-            <span style={{ fontSize: '0.65rem', color: 'var(--lab-muted)' }}>ε</span>
+            <span className="lab-empty">ε</span>
           ) : (
             pda.stack.map((s, i) => (
-              <span
-                key={i}
-                style={{
-                  display: 'grid',
-                  placeItems: 'center',
-                  width: '1.25rem',
-                  height: '1.5rem',
-                  border: '1px solid var(--lab-orange)',
-                  fontSize: '0.6rem',
-                  color: 'var(--lab-orange)',
-                  marginBottom: i * 2,
-                }}
-              >
+              // degraus: cada símbolo empilhado fica um pouco mais alto
+              <span key={i} className="automata-panel__stack-cell" style={{ marginBottom: i * 2 }}>
                 {s}
               </span>
             ))
@@ -93,21 +63,12 @@ export const AutomataPanel = memo(function AutomataPanel() {
         </div>
       </Cell>
 
-      <Cell title="TM" sub={`tape · ${tm.state}`}>
-        <div style={{ display: 'flex', gap: '2px', overflowX: 'auto' }}>
+      <Cell title="TM" sub={`fita · ${tm.state}`}>
+        <div className="automata-panel__tape">
           {tm.tape.map((c, i) => (
             <span
               key={i}
-              style={{
-                display: 'grid',
-                placeItems: 'center',
-                minWidth: '1.5rem',
-                height: '1.5rem',
-                fontSize: '0.6rem',
-                background: i === tm.head ? 'var(--lab-purple)' : 'var(--lab-bg)',
-                color: i === tm.head ? 'white' : 'var(--lab-muted)',
-                borderRadius: '3px',
-              }}
+              className={i === tm.head ? 'automata-panel__tape-cell automata-panel__tape-cell--head' : 'automata-panel__tape-cell'}
             >
               {c}
             </span>
@@ -118,28 +79,12 @@ export const AutomataPanel = memo(function AutomataPanel() {
   )
 })
 
-function Cell({ title, sub, children }: { title: string; sub: string; children: ReactNode }) {
+function Cell({ title, sub, children }: Readonly<{ title: string; sub: string; children: ReactNode }>) {
   return (
-    <div
-      style={{
-        border: '1px solid var(--lab-border)',
-        background: 'var(--lab-bg)',
-        borderRadius: '8px',
-        padding: '0.75rem',
-      }}
-    >
-      <p
-        style={{
-          fontSize: '0.55rem',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: 'var(--lab-accent)',
-        }}
-      >
-        {title}
-      </p>
-      <p style={{ fontSize: '0.5rem', color: 'var(--lab-muted)' }}>{sub}</p>
-      <div style={{ marginTop: '0.5rem' }}>{children}</div>
+    <div className="lab-box">
+      <p className="lab-box__title">{title}</p>
+      <p className="lab-label">{sub}</p>
+      <div className="lab-box__body">{children}</div>
     </div>
   )
 }

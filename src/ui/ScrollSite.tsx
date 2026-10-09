@@ -69,7 +69,7 @@ export function ScrollSite({ views }: ScrollSiteProps) {
 
           {!booting && (
             <p className="graph-viewport__hint" aria-hidden>
-              no fim da página · scroll para avançar
+              continua a descer para a secção seguinte
             </p>
           )}
         </div>

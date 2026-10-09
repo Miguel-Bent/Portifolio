@@ -1,15 +1,9 @@
 import { memo, useMemo } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { CS_GRAPH, NODE_ORDER } from '../theory/graph/cs-graph'
+import { ALGO_META, CS_GRAPH, NODE_ORDER } from '../theory/graph/cs-graph'
 import { edgeKey } from '../theory/graph/edges'
 import { useLab } from '../store/lab-store'
 import { GraphEdges, nodeReached } from './GraphEdges'
-
-const ALGO_COLOR: Record<string, string> = {
-  dijkstra: 'var(--lab-green)',
-  astar: 'var(--lab-accent)',
-  bfs: 'var(--lab-orange)',
-}
 
 export const LabGraph = memo(function LabGraph() {
   const path = useLab((s) => s.path)
@@ -28,18 +22,10 @@ export const LabGraph = memo(function LabGraph() {
   )
 
   const focus = CS_GRAPH.vertices[choreoAt ?? node]
-  const pathColor = ALGO_COLOR[algo] ?? 'var(--lab-accent)'
+  const pathColor = ALGO_META[algo].color
 
   return (
     <div className="relative h-full w-full bg-[var(--lab-surface)]">
-      <div
-        className="absolute inset-0 opacity-40"
-        style={{
-          backgroundImage:
-            'linear-gradient(var(--lab-grid) 1px, transparent 1px), linear-gradient(90deg, var(--lab-grid) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
-        }}
-      />
       <svg className="relative h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
         <GraphEdges
           discovered={discoveredEdges}

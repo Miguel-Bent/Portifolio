@@ -1,14 +1,18 @@
 import { memo, useMemo } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { CS_GRAPH, NODE_ORDER } from '../theory/graph/cs-graph'
+import { ALGO_META, CS_GRAPH, NODE_ORDER } from '../theory/graph/cs-graph'
 import { edgeKey, TOTAL_EDGE_COUNT } from '../theory/graph/edges'
 import { useLab } from '../store/lab-store'
 import { GraphEdges, nodeReached } from './GraphEdges'
 
-const ALGO_COLOR: Record<string, string> = {
-  dijkstra: '#4ade80',
-  astar: '#00e5c3',
-  bfs: '#ff8a5c',
+// Mesmos valores dos tokens em global.css
+const C = {
+  surface: '#191917',
+  void: '#121211',
+  frontier: '#ecebe6',
+  visited: '#85837a',
+  idle: '#45443e',
+  label: '#b3b1a9',
 }
 
 export const GraphPanel = memo(function GraphPanel() {
@@ -32,34 +36,24 @@ export const GraphPanel = memo(function GraphPanel() {
   )
 
   const focus = CS_GRAPH.vertices[choreoAt ?? node]
-  const pathColor = ALGO_COLOR[algo] ?? '#00e5c3'
+  const pathColor = ALGO_META[algo].color
 
   return (
     <aside className="graph-panel" aria-label="Grafo de navegação">
       <div className="graph-panel__frame">
         <div className="graph-panel__header">
-          <span className="graph-panel__title">Navigation Graph</span>
+          <span className="graph-panel__title">Mapa do site</span>
           <span className="graph-panel__status">
             {booting
-              ? 'booting…'
+              ? 'a iniciar…'
               : graphComplete
-                ? 'map complete'
+                ? 'mapa completo'
                 : busy
-                  ? 'tracing…'
-                  : `${discoveredEdges.length} edges`}
+                  ? 'a calcular…'
+                  : `${discoveredEdges.length} / ${TOTAL_EDGE_COUNT} arestas`}
           </span>
         </div>
         <svg className="graph-panel__svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="0.8" result="blur" />
-              <feMerge>
-                <feMergeNode in="blur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </defs>
-
           <GraphEdges
             discovered={discoveredEdges}
             graphComplete={graphComplete}
@@ -86,26 +80,25 @@ export const GraphPanel = memo(function GraphPanel() {
                   cx={v.pos.x * 100}
                   cy={v.pos.y * 100}
                   r={active ? 3.2 : 2.4}
-                  fill={active ? pathColor : onPath ? `${pathColor}44` : '#0e0e12'}
+                  fill={active ? pathColor : onPath ? `${pathColor}44` : C.surface}
                   stroke={
                     frontier.includes(id)
-                      ? '#00e5c3'
+                      ? C.frontier
                       : visited.includes(id)
-                        ? '#9b7dff'
+                        ? C.visited
                         : active
                           ? pathColor
-                          : '#3a3a48'
+                          : C.idle
                   }
                   strokeWidth="0.4"
-                  filter={active ? 'url(#glow)' : undefined}
                 />
                 <text
                   x={v.pos.x * 100}
                   y={v.pos.y * 100 + 0.5}
                   textAnchor="middle"
                   fontSize="1.65"
-                  fill={active ? '#060608' : '#a8a6a0'}
-                  fontFamily="JetBrains Mono, monospace"
+                  fill={active ? C.void : C.label}
+                  fontFamily="IBM Plex Mono, monospace"
                   fontWeight={active ? 600 : 400}
                 >
                   {v.symbol}
@@ -129,14 +122,14 @@ export const GraphPanel = memo(function GraphPanel() {
       </div>
 
       <div className="card">
-        <p className="card__tag">active module</p>
+        <p className="card__tag">estás em</p>
         <p className="card__title">
           {CS_GRAPH.vertices[node].symbol} {CS_GRAPH.vertices[node].label}
         </p>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+        <p className="text-note graph-panel__hint">
           {graphComplete
-            ? 'mapa completo · todas as arestas reveladas'
-            : `percorre o grafo · ${discoveredEdges.length} / ${TOTAL_EDGE_COUNT} arestas`}
+            ? 'Já percorreste todas as arestas.'
+            : 'Clica num vértice para ir para essa secção. As arestas aparecem à medida que passas por elas.'}
         </p>
       </div>
     </aside>

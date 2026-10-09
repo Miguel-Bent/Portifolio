@@ -20,7 +20,7 @@ export const GraphEdges = memo(function GraphEdges({
 }: GraphEdgesProps) {
   const reduce = useReducedMotion()
   const discoveredSet = new Set(discovered)
-  const dim = variant === 'lab' ? 'var(--lab-border)' : '#2a2a34'
+  const dim = variant === 'lab' ? 'var(--lab-border)' : '#33322e'
   const dur = reduce ? 0 : 0.65
 
   return (

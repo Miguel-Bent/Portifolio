@@ -6,7 +6,7 @@ const SYM: Record<NodeId, string> = Object.fromEntries(
   (Object.values(CS_GRAPH.vertices) as Vertex[]).map((v) => [v.id, v.symbol]),
 ) as Record<NodeId, string>
 
-/** PDA: empilha símbolos ao percorrer o caminho — demonstra LIFO */
+/** PDA: empilha símbolos ao percorrer o caminho (LIFO) */
 export class PathPda {
   private stack = new Stack<string>()
   private state = 'q0'

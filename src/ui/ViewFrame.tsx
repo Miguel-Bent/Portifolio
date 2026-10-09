@@ -1,48 +1,27 @@
 import { memo, type ReactNode } from 'react'
-import { CS_GRAPH } from '../theory/graph/cs-graph'
+import { CS_GRAPH, NODE_ORDER } from '../theory/graph/cs-graph'
 import type { NodeId } from '../theory/types'
 
-const INDEX: Record<NodeId, string> = {
-  init: '00',
-  automata: '01',
-  graphs: '02',
-  algo: '03',
-  structures: '04',
-  trace: '05',
-  complexity: '06',
-  memory: '07',
-  proof: '08',
-  repos: '09',
-  io: '10',
-}
+const index = (id: NodeId) => String(NODE_ORDER.indexOf(id)).padStart(2, '0')
 
 export const ViewFrame = memo(function ViewFrame({
   id,
   title,
   subtitle,
   children,
-  hero,
-}: {
+}: Readonly<{
   id: NodeId
   title: string
   subtitle?: string
   children: ReactNode
-  hero?: boolean
-}) {
-  const v = CS_GRAPH.vertices[id]
-
+}>) {
   return (
     <article className="view">
       <header>
         <p className="view__eyebrow">
-          {INDEX[id]} · depth {v.depth}
+          {index(id)} · profundidade {CS_GRAPH.vertices[id].depth}
         </p>
-        <h1
-          className="view__title"
-          style={hero ? { fontSize: 'clamp(3rem, 9vw, 5.5rem)' } : undefined}
-        >
-          {title}
-        </h1>
+        <h1 className="view__title">{title}</h1>
         {subtitle && <p className="view__subtitle">{subtitle}</p>}
       </header>
       <div className="view__body">{children}</div>

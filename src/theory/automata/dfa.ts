@@ -28,10 +28,6 @@ export class NavDfa {
     return { state: this.state, transitions: [...this.log].slice(-8) }
   }
 
-  label() {
-    return LABELS[this.state]
-  }
-
   now() {
     return this.state
   }

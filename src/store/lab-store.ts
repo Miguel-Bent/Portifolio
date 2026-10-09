@@ -12,8 +12,8 @@ import type {
 import type { FlowDir } from '../navigation/graph-direction'
 import { flowBetween } from '../navigation/graph-direction'
 import { edgesFromPath, mergeEdges, TOTAL_EDGE_COUNT } from '../theory/graph/edges'
-import { cortex } from '../cortex/engine'
-import { synapse } from '../synapse/bus'
+import { engine } from '../core/engine'
+import { bus } from '../core/bus'
 
 interface LogLine {
   id: number
@@ -66,9 +66,9 @@ export const useLab = create<LabState>((set) => ({
   frontier: [],
   visited: [],
   result: null,
-  dfa: cortex.dfaSnap(),
-  pda: cortex.pdaSnap(),
-  tm: cortex.tmSnap(),
+  dfa: engine.dfaSnap(),
+  pda: engine.pdaSnap(),
+  tm: engine.tmSnap(),
   choreoAt: null,
   labOpen: false,
   booting: true,
@@ -78,16 +78,16 @@ export const useLab = create<LabState>((set) => ({
   flowDir: { dx: 0, dy: 0 },
   logs: [],
   metrics: null,
-  goto: (t) => synapse.fire({ type: 'GOTO', target: t }),
+  goto: (t) => bus.fire({ type: 'GOTO', target: t }),
   setAlgo: (a) => {
     set({ algo: a })
-    synapse.fire({ type: 'ALGO', algo: a })
+    bus.fire({ type: 'ALGO', algo: a })
   },
   toggleLab: () => set((s) => ({ labOpen: !s.labOpen })),
 }))
 
 export function wireLab(): () => void {
-  return synapse.on('*', (p) => {
+  return bus.on('*', (p) => {
     switch (p.type) {
       case 'PHASE':
         useLab.setState({ phase: p.phase })

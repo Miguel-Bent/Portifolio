@@ -1,15 +1,4 @@
-export type NodeId =
-  | 'init'
-  | 'automata'
-  | 'graphs'
-  | 'algo'
-  | 'trace'
-  | 'complexity'
-  | 'repos'
-  | 'structures'
-  | 'memory'
-  | 'proof'
-  | 'io'
+export type NodeId = 'init' | 'repos' | 'trace' | 'structures' | 'how' | 'io'
 
 export type AlgoId = 'dijkstra' | 'astar' | 'bfs'
 

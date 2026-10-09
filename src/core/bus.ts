@@ -2,7 +2,7 @@ import type { Pulse } from '../theory/types'
 
 type Fn = (p: Pulse) => void
 
-class Synapse {
+class Bus {
   private m = new Map<Pulse['type'] | '*', Set<Fn>>()
 
   on(t: Pulse['type'] | '*', fn: Fn) {
@@ -17,4 +17,4 @@ class Synapse {
   }
 }
 
-export const synapse = new Synapse()
+export const bus = new Bus()

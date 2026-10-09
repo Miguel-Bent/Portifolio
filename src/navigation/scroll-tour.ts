@@ -1,19 +1,7 @@
 import type { NodeId } from '../theory/types'
 
-/** Percorso DFS pela árvore do grafo — cada passo é uma aresta real */
-export const SCROLL_TOUR: NodeId[] = [
-  'init',
-  'automata',
-  'graphs',
-  'algo',
-  'trace',
-  'complexity',
-  'memory',
-  'proof',
-  'structures',
-  'repos',
-  'io',
-]
+/** Ordem do scroll. Cada passo segue uma aresta do grafo. */
+export const SCROLL_TOUR: NodeId[] = ['init', 'repos', 'trace', 'structures', 'how', 'io']
 
 export function tourIndex(id: NodeId) {
   return SCROLL_TOUR.indexOf(id)

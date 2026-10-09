@@ -2,14 +2,35 @@ import { memo, useEffect, useRef, useState } from 'react'
 import { profile } from '../content/profile'
 import { useLab } from '../store/lab-store'
 import { NAV_PHASES } from '../theory/automata/dfa'
-import { BOOT_HOLD_MS, cortex } from '../cortex/engine'
-import { synapse } from '../synapse/bus'
+import { BOOT_HOLD_MS, engine } from '../core/engine'
+import { bus } from '../core/bus'
+import { CS_GRAPH } from '../theory/graph/cs-graph'
+
+const GRAPH_SYMBOLS = Object.values(CS_GRAPH.vertices).map((v) => v.symbol)
+const SEEN_KEY = 'theorylab:intro-seen'
+
+function introSeen() {
+  try {
+    return sessionStorage.getItem(SEEN_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function markIntroSeen() {
+  try {
+    sessionStorage.setItem(SEEN_KEY, '1')
+  } catch {
+    // sem storage (modo privado, etc.): a intro volta a aparecer, não faz mal
+  }
+}
 
 function goToMain(settled: { current: boolean }) {
   if (settled.current) return
   settled.current = true
-  void cortex.settleIntro()
-  synapse.fire({ type: 'INTRO_PASSED' })
+  markIntroSeen()
+  void engine.settleIntro()
+  bus.fire({ type: 'INTRO_PASSED' })
   const site = document.getElementById('site-content')
   site?.scrollIntoView({ behavior: 'smooth' })
   window.setTimeout(() => {
@@ -26,6 +47,11 @@ export const AutomataIntro = memo(function AutomataIntro() {
   const settled = useRef(false)
   const sectionRef = useRef<HTMLElement>(null)
   const [countdown, setCountdown] = useState<number | null>(null)
+
+  // Corre antes do engine.boot() no App (efeitos dos filhos correm primeiro)
+  useEffect(() => {
+    if (introSeen()) engine.skipIntro()
+  }, [])
 
   useEffect(() => {
     const el = sectionRef.current
@@ -45,7 +71,7 @@ export const AutomataIntro = memo(function AutomataIntro() {
   }, [booting])
 
   useEffect(() => {
-    const unsub = synapse.on('BOOT_AUTO_ADVANCE', () => goToMain(settled))
+    const unsub = bus.on('BOOT_AUTO_ADVANCE', () => goToMain(settled))
     return () => {
       unsub()
     }
@@ -65,7 +91,7 @@ export const AutomataIntro = memo(function AutomataIntro() {
     }
 
     let intervalId: number | undefined
-    const unsub = synapse.on('BOOT_HOLD_START', () => {
+    const unsub = bus.on('BOOT_HOLD_START', () => {
       intervalId = onHold()
     })
 
@@ -82,16 +108,15 @@ export const AutomataIntro = memo(function AutomataIntro() {
   const isNameTape =
     tm.state === 'boot' ||
     tm.tape.some(
-      (c) => c.length === 1 && c !== '⊔' && !['λ', 'G', 'T', 'R', 'S', 'P', 'Ω'].includes(c),
+      (c) => c.length === 1 && c !== '⊔' && !GRAPH_SYMBOLS.includes(c),
     )
 
   return (
-    <section ref={sectionRef} className="automata-hero" aria-label="Introdução — autômatos">
-      <div className="automata-hero__grid" />
+    <section ref={sectionRef} className="automata-hero" aria-label="Introdução com autômatos">
 
       <div className="automata-hero__inner">
         <header className="automata-hero__header">
-          <p className="automata-hero__eyebrow">theorylab · boot sequence</p>
+          <p className="automata-hero__eyebrow">theorylab · a arrancar</p>
           <h1 className="automata-hero__title">
             {booting && !isNameTape ? 'A inicializar…' : profile.name}
           </h1>
@@ -99,7 +124,7 @@ export const AutomataIntro = memo(function AutomataIntro() {
 
         <div className="automata-hero__machines">
           <div className="automata-hero__machine automata-hero__machine--dfa">
-            <p className="automata-hero__machine-label">DFA · navigation fsm</p>
+            <p className="automata-hero__machine-label">DFA · fases da navegação</p>
             <div className="automata-hero__dfa">
               {NAV_PHASES.map((p) => (
                 <span
@@ -128,7 +153,7 @@ export const AutomataIntro = memo(function AutomataIntro() {
                   ].join(' ')}
                 >
                   <span>{cell === ' ' ? '·' : cell}</span>
-                  {i === tm.head && <i className="automata-hero__tape-read">read</i>}
+                  {i === tm.head && <i className="automata-hero__tape-read">lê</i>}
                 </div>
               ))}
             </div>
@@ -162,6 +187,11 @@ export const AutomataIntro = memo(function AutomataIntro() {
         </div>
       )}
 
+      {booting && (
+        <button type="button" className="automata-hero__skip" onClick={() => engine.skipIntro()}>
+          Saltar
+        </button>
+      )}
     </section>
   )
 })

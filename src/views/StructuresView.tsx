@@ -56,8 +56,8 @@ export function StructuresView() {
   return (
     <ViewFrame
       id="structures"
-      title="Structures"
-      subtitle="Camadas da stack — do browser ao deploy. Sem níveis, a prova está nos repos."
+      title="Stack"
+      subtitle="A stack que uso, por camadas, do browser ao deploy. Não pus níveis; os projetos mostram onde usei cada coisa."
     >
       <div className="skills-stack" role="list">
         {allLayers.map((layer, i) => (

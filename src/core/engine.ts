@@ -4,7 +4,7 @@ import type { AlgoId, NodeId, RunMetrics } from '../theory/types'
 import { NavDfa } from '../theory/automata/dfa'
 import { PathPda } from '../theory/automata/pda'
 import { TapeMachine } from '../theory/automata/turing'
-import { synapse } from '../synapse/bus'
+import { bus } from './bus'
 import { animator } from './animator'
 
 import { profileNameBoot } from '../content/profile'
@@ -12,29 +12,22 @@ import { profileNameBoot } from '../content/profile'
 const BOOT_CHARS = profileNameBoot.split('')
 export const BOOT_HOLD_MS = 2_000
 
-class Cortex {
+class Engine {
   private dfa = new NavDfa()
   private pda = new PathPda()
   private tm = new TapeMachine()
   private here: NodeId = 'init'
   private algo: AlgoId = 'dijkstra'
   private busy = false
+  private skipBoot = false
 
   constructor() {
-    synapse.on('GOTO', (p) => {
+    bus.on('GOTO', (p) => {
       if (p.type === 'GOTO') void this.go(p.target)
     })
-    synapse.on('ALGO', (p) => {
+    bus.on('ALGO', (p) => {
       if (p.type === 'ALGO' && !this.busy) this.algo = p.algo
     })
-  }
-
-  locate() {
-    return this.here
-  }
-
-  algorithm() {
-    return this.algo
   }
 
   dfaSnap() {
@@ -49,6 +42,19 @@ class Cortex {
     return this.tm.snap()
   }
 
+  /** Acaba a intro já: as esperas restantes do boot passam a zero. */
+  skipIntro() {
+    this.skipBoot = true
+  }
+
+  /** Espera que termina mais cedo se skipIntro() for chamado. */
+  private async bootWait(ms: number) {
+    const end = performance.now() + ms
+    while (!this.skipBoot && performance.now() < end) {
+      await animator.wait(Math.min(100, end - performance.now()))
+    }
+  }
+
   async boot() {
     if (this.busy) return
     this.busy = true
@@ -58,7 +64,7 @@ class Cortex {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const stepMs = reduce ? 0 : 110
 
-    synapse.fire({ type: 'BOOT_START' })
+    bus.fire({ type: 'BOOT_START' })
 
     try {
       const tape = ['⊔', ...BOOT_CHARS, '⊔']
@@ -66,34 +72,34 @@ class Cortex {
       this.tm.loadCustom(tape, 1, 'boot')
       this.pda.loadChars(BOOT_CHARS)
 
-      synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
-      synapse.fire({ type: 'TM', snap: this.tm.snap() })
-      synapse.fire({ type: 'PDA', snap: this.pda.snap() })
+      bus.fire({ type: 'DFA', snap: this.dfa.snap() })
+      bus.fire({ type: 'TM', snap: this.tm.snap() })
+      bus.fire({ type: 'PDA', snap: this.pda.snap() })
 
       for (let i = 0; i < BOOT_CHARS.length; i++) {
         this.tm.loadCustom(tape, i + 1, 'boot')
         this.pda.bootTick()
-        synapse.fire({ type: 'TM', snap: this.tm.snap() })
-        synapse.fire({ type: 'PDA', snap: this.pda.snap() })
-        if (stepMs > 0) await animator.wait(stepMs)
+        bus.fire({ type: 'TM', snap: this.tm.snap() })
+        bus.fire({ type: 'PDA', snap: this.pda.snap() })
+        if (stepMs > 0) await this.bootWait(stepMs)
       }
 
       for (const phase of ['run', 'walk', 'render', 'done'] as const) {
         this.dfa.setState(phase)
-        synapse.fire({ type: 'PHASE', phase })
-        synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
-        if (!reduce) await animator.wait(80)
+        bus.fire({ type: 'PHASE', phase })
+        bus.fire({ type: 'DFA', snap: this.dfa.snap() })
+        if (!reduce) await this.bootWait(80)
       }
 
-      synapse.fire({ type: 'PHASE', phase: 'idle' })
+      bus.fire({ type: 'PHASE', phase: 'idle' })
       this.dfa.reset()
-      synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
+      bus.fire({ type: 'DFA', snap: this.dfa.snap() })
 
-      synapse.fire({ type: 'BOOT_HOLD_START' })
-      await animator.wait(BOOT_HOLD_MS)
-      synapse.fire({ type: 'BOOT_AUTO_ADVANCE' })
+      bus.fire({ type: 'BOOT_HOLD_START' })
+      await this.bootWait(BOOT_HOLD_MS)
+      bus.fire({ type: 'BOOT_AUTO_ADVANCE' })
     } finally {
-      synapse.fire({ type: 'BOOT_DONE' })
+      bus.fire({ type: 'BOOT_DONE' })
       this.busy = false
     }
   }
@@ -104,26 +110,26 @@ class Cortex {
     this.tm.seek('init')
     this.pda.reset()
     this.dfa.reset()
-    synapse.fire({ type: 'PHASE', phase: 'idle' })
-    synapse.fire({ type: 'TM', snap: this.tm.snap() })
-    synapse.fire({ type: 'PDA', snap: this.pda.snap() })
-    synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
+    bus.fire({ type: 'PHASE', phase: 'idle' })
+    bus.fire({ type: 'TM', snap: this.tm.snap() })
+    bus.fire({ type: 'PDA', snap: this.pda.snap() })
+    bus.fire({ type: 'DFA', snap: this.dfa.snap() })
   }
 
   async go(target: NodeId) {
     if (this.busy) {
-      synapse.fire({ type: 'LOG', msg: `DFA ocupado — pedido ${target} ignorado`, warn: true })
+      bus.fire({ type: 'LOG', msg: `DFA ocupado, pedido ${target} ignorado`, warn: true })
       return
     }
     if (this.tm.snap().state === 'boot') {
       await this.settleIntro()
     }
     if (this.dfa.now() !== 'idle') {
-      synapse.fire({ type: 'LOG', msg: `DFA ocupado — pedido ${target} ignorado`, warn: true })
+      bus.fire({ type: 'LOG', msg: `DFA ocupado, pedido ${target} ignorado`, warn: true })
       return
     }
     if (target === this.here) {
-      synapse.fire({ type: 'LOG', msg: `Já em ${target}` })
+      bus.fire({ type: 'LOG', msg: `Já em ${target}` })
       return
     }
 
@@ -135,15 +141,15 @@ class Cortex {
       this.phase('scan')
       this.tm.seek(target)
       this.tm.setState('scan')
-      synapse.fire({ type: 'TM', snap: this.tm.snap() })
-      synapse.fire({ type: 'RUN_START', from, to: target, algo })
-      synapse.fire({ type: 'LOG', msg: `${algo.toUpperCase()} · ${from} → ${target}` })
+      bus.fire({ type: 'TM', snap: this.tm.snap() })
+      bus.fire({ type: 'RUN_START', from, to: target, algo })
+      bus.fire({ type: 'LOG', msg: `${algo.toUpperCase()} · ${from} → ${target}` })
 
       this.phase('run')
       this.tm.setState('compute')
 
       const result = runAlgo(algo, CS_GRAPH, from, target, (h) => {
-        synapse.fire({
+        bus.fire({
           type: 'EXPAND',
           node: h.node,
           frontier: h.frontier,
@@ -151,11 +157,11 @@ class Cortex {
         })
       })
 
-      synapse.fire({ type: 'PATH', result })
-      synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
+      bus.fire({ type: 'PATH', result })
+      bus.fire({ type: 'DFA', snap: this.dfa.snap() })
 
       this.pda.loadPath(result.path)
-      synapse.fire({ type: 'PDA', snap: this.pda.snap() })
+      bus.fire({ type: 'PDA', snap: this.pda.snap() })
 
       this.phase('walk')
       this.tm.setState('traverse')
@@ -166,16 +172,16 @@ class Cortex {
       const stepMs = reduce ? 30 : 680
 
       for (let i = 0; i < result.path.length; i++) {
-        synapse.fire({ type: 'STEP', node: result.path[i], i, path: result.path })
+        bus.fire({ type: 'STEP', node: result.path[i], i, path: result.path })
         this.tm.seek(result.path[i])
-        synapse.fire({ type: 'TM', snap: this.tm.snap() })
+        bus.fire({ type: 'TM', snap: this.tm.snap() })
         const pdaSnap = this.pda.tick()
-        synapse.fire({ type: 'PDA', snap: pdaSnap })
+        bus.fire({ type: 'PDA', snap: pdaSnap })
         if (i < result.path.length - 1) await animator.wait(stepMs)
       }
 
       while (this.pda.snap().stack.length > 0) {
-        synapse.fire({ type: 'PDA', snap: this.pda.tick() })
+        bus.fire({ type: 'PDA', snap: this.pda.tick() })
         if (!reduce) await animator.wait(140)
       }
 
@@ -184,7 +190,7 @@ class Cortex {
 
       this.phase('done')
       this.tm.setState('halt')
-      synapse.fire({ type: 'TM', snap: this.tm.snap() })
+      bus.fire({ type: 'TM', snap: this.tm.snap() })
 
       const metrics: RunMetrics = {
         algo,
@@ -194,9 +200,9 @@ class Cortex {
         animMs: result.path.length * stepMs,
         stackOps: this.pda.operationCount(),
       }
-      synapse.fire({ type: 'METRICS', data: metrics })
-      synapse.fire({ type: 'DONE', node: target })
-      synapse.fire({
+      bus.fire({ type: 'METRICS', data: metrics })
+      bus.fire({ type: 'DONE', node: target })
+      bus.fire({
         type: 'LOG',
         msg: `✓ ${result.path.join(' → ')} · custo ${result.cost} · ${result.complexity}`,
       })
@@ -207,7 +213,7 @@ class Cortex {
       this.busy = false
       if (this.dfa.now() !== 'idle') {
         this.dfa.reset()
-        synapse.fire({ type: 'PHASE', phase: 'idle' })
+        bus.fire({ type: 'PHASE', phase: 'idle' })
       }
     }
   }
@@ -215,9 +221,9 @@ class Cortex {
   private phase(p: 'scan' | 'run' | 'walk' | 'render' | 'done' | 'idle') {
     if (p === 'idle') this.dfa.reset()
     else this.dfa.step(p)
-    synapse.fire({ type: 'PHASE', phase: p })
-    synapse.fire({ type: 'DFA', snap: this.dfa.snap() })
+    bus.fire({ type: 'PHASE', phase: p })
+    bus.fire({ type: 'DFA', snap: this.dfa.snap() })
   }
 }
 
-export const cortex = new Cortex()
+export const engine = new Engine()

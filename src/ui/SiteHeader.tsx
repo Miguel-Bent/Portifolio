@@ -35,17 +35,17 @@ export const SiteHeader = memo(function SiteHeader() {
 
       <div className="telemetry">
         <div className="telemetry__item">
-          <span className="telemetry__label">algorithm</span>
+          <span className="telemetry__label">algoritmo</span>
           <span className="telemetry__value telemetry__value--accent">
             {ALGO_META[algo].name}
           </span>
         </div>
         <div className="telemetry__item">
-          <span className="telemetry__label">dfa phase</span>
+          <span className="telemetry__label">fase</span>
           <span className="telemetry__value">{phase}</span>
         </div>
         <div className="telemetry__item">
-          <span className="telemetry__label">path</span>
+          <span className="telemetry__label">caminho</span>
           <span className="telemetry__value">{pathStr}</span>
         </div>
       </div>

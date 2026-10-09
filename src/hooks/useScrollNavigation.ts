@@ -49,7 +49,7 @@ export function useScrollNavigation(slideRef: RefObject<HTMLElement | null>, nod
 
       const { booting, phase, node, labOpen, introPassed } = useLab.getState()
 
-      // Bloqueado — absorve scroll no limite para não travar
+      // Bloqueado: absorve scroll no limite para não travar
       if (booting || phase !== 'idle' || labOpen) {
         absorbEdge(e, edges)
         return
@@ -60,7 +60,7 @@ export function useScrollNavigation(slideRef: RefObject<HTMLElement | null>, nod
         return
       }
 
-      // Página curta — usa só a direção do scroll
+      // Página curta: usa só a direção do scroll
       if (edges.fits) {
         if (down) {
           if (!nextInTour(node)) {
@@ -91,7 +91,7 @@ export function useScrollNavigation(slideRef: RefObject<HTMLElement | null>, nod
         return
       }
 
-      // A meio da página — scroll normal
+      // A meio da página: scroll normal
       if (down && !edges.atBottom) {
         overscroll.current = 0
         lastIntent.current = null
