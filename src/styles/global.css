@@ -10,7 +10,7 @@
 
   --text: #ecebe6;
   --text-soft: #b3b1a9;
-  --text-muted: #85837a;
+  --text-muted: #929087;
 
   --accent: #e0a243;
   --accent-dim: #c48a30;
@@ -20,7 +20,7 @@
   --lab-surface: #191917;
   --lab-border: #33322e;
   --lab-text: #ecebe6;
-  --lab-muted: #85837a;
+  --lab-muted: #929087;
   --lab-accent: #e0a243;
   --lab-green: #9fb88a;
   --lab-purple: #a59bc4;
@@ -37,14 +37,23 @@
 
 * {
   box-sizing: border-box;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
+/* Barras finas e discretas, mas visíveis: escondê-las tirava a noção de quanto falta ler */
 *::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: var(--border);
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 html,
@@ -75,6 +84,21 @@ button:disabled {
 ::selection {
   background: var(--accent);
   color: var(--void);
+}
+
+/* Foco visível só para teclado, igual em todo o site */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+svg g[role='button']:focus-visible {
+  outline: none;
+}
+
+svg g[role='button']:focus-visible circle {
+  stroke: var(--accent);
+  stroke-width: 0.8;
 }
 
 .font-display {

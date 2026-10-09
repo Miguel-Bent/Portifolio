@@ -10,7 +10,7 @@ const C = {
   surface: '#191917',
   void: '#121211',
   frontier: '#ecebe6',
-  visited: '#85837a',
+  visited: '#929087',
   idle: '#45443e',
   label: '#b3b1a9',
 }
@@ -72,9 +72,15 @@ export const GraphPanel = memo(function GraphPanel() {
                 key={id}
                 role="button"
                 tabIndex={0}
+                aria-label={active ? `${v.label} (secção actual)` : `Ir para ${v.label}`}
+                aria-disabled={busy || undefined}
                 style={{ cursor: busy ? 'wait' : 'pointer', opacity: reached ? 1 : 0.35 }}
                 onClick={() => !busy && goto(id)}
-                onKeyDown={(e) => e.key === 'Enter' && !busy && goto(id)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter' && e.key !== ' ') return
+                  e.preventDefault()
+                  if (!busy) goto(id)
+                }}
               >
                 <circle
                   cx={v.pos.x * 100}

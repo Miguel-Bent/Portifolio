@@ -2,6 +2,7 @@ import type { ReactNode, Ref } from 'react'
 import { useRef } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { flowToSlide } from '../navigation/graph-direction'
+import { nextInTour } from '../navigation/scroll-tour'
 import { SiteHeader } from './SiteHeader'
 import { DockNav } from './DockNav'
 import { GraphPanel } from './GraphPanel'
@@ -35,7 +36,7 @@ export function ScrollSite({ views }: ScrollSiteProps) {
       <SiteHeader />
 
       <div className="shell__main">
-        <div className="graph-viewport">
+        <main className="graph-viewport">
           <AnimatePresence initial={false}>
             <motion.div
               key={node}
@@ -67,12 +68,12 @@ export function ScrollSite({ views }: ScrollSiteProps) {
             </motion.div>
           </AnimatePresence>
 
-          {!booting && (
+          {!booting && nextInTour(node) && (
             <p className="graph-viewport__hint" aria-hidden>
               continua a descer para a secção seguinte
             </p>
           )}
-        </div>
+        </main>
 
         <GraphPanel />
       </div>

@@ -22,6 +22,7 @@ export const DockNav = memo(function DockNav() {
             onClick={() => goto(id)}
             aria-current={active ? 'page' : undefined}
             title={v.label}
+            aria-label={v.label}
             className={['dock__btn', active ? 'dock__btn--active' : ''].join(' ')}
           >
             <span className="dock__symbol">{v.symbol}</span>
