@@ -1,106 +1,43 @@
-# THEORYLAB — Portfólio de Ciência da Computação
+# theorylab
 
-Portfólio-laboratório interactivo de **Miguel Bento** (ISUTC, Maputo). A navegação entre secções é um problema de grafo resolvido por algoritmos reais — Dijkstra, A* e BFS — com autômatos (DFA, PDA, TM) visíveis em tempo real.
+O meu portfólio. As seis secções estão ligadas como um grafo com pesos, e mudar de secção calcula o caminho com Dijkstra, A* ou BFS. Um DFA controla as fases de cada transição, um PDA empilha o caminho durante a animação e uma máquina de Turing acompanha a posição numa fita. O CS Lab (botão no header) mostra tudo isto a acontecer.
 
-## Funcionalidades
+Fiz isto para juntar duas coisas que me interessam: projetos que estão no ar e a teoria que estou a estudar no ISUTC.
 
-| Área | Implementação |
-|------|---------------|
-| **Dijkstra** | Caminho mínimo com priority queue — `O((V+E) log V)` |
-| **A\*** | Heurística por profundidade — guia a busca |
-| **BFS** | Menor número de arestas — fila FIFO `O(V+E)` |
-| **DFA** | Fases de navegação (`idle → scan → run → walk → render → done`) |
-| **PDA** | Empilha símbolos do caminho — demonstra LIFO |
-| **Turing Machine** | Fita de módulos com cabeça móvel |
-| **CS Lab** | Painel lateral com frontier, visited, complexidade e logs |
-| **Scroll site** | 11 secções com conteúdo de portfólio real |
+## Correr localmente
 
-## Início rápido
+Precisa de Node.js 20 ou mais recente.
 
 ```bash
 npm install
 npm run dev      # http://localhost:5173
+npm test         # testes do pathfinding e do grafo (Vitest)
 npm run build    # gera dist/
-npm run preview  # serve dist/ localmente
-npm test         # Vitest (pathfinding)
 ```
 
-**Requisitos:** Node.js 20+
+## Secções
 
-## Secções (nós do grafo)
+| Vértice | id | Secção |
+|---|---|---|
+| λ | `init` | Início |
+| R | `repos` | Projetos |
+| T | `trace` | Percurso |
+| S | `structures` | Stack |
+| G | `how` | Como funciona |
+| Ω | `io` | Contacto |
 
-| Símbolo | ID | Vista | Conteúdo |
-|---------|-----|-------|----------|
-| λ | `init` | Home | Apresentação e CTA |
-| M | `automata` | Automata | DFA, PDA e TM |
-| G | `graphs` | Graphs | Teoria de grafos |
-| A | `algo` | Algo | Dijkstra, A*, BFS |
-| T | `trace` | Trace | Percurso de aprendizagem |
-| C | `complexity` | Complexity | Classes assintóticas |
-| R | `repos` | Repos | Projetos e experimentos |
-| S | `structures` | Structures | Competências técnicas |
-| H | `memory` | Memory | Heap, stack, queue, hash |
-| P | `proof` | Proof | Experiência profissional |
-| Ω | `io` | Contact | Contacto |
+O grafo está em `src/theory/graph/cs-graph.ts`. Os pesos foram escolhidos para que os algoritmos discordem: de `init` a `io`, o BFS vai por `repos` (custo 4) e o Dijkstra passa também por `trace` (custo 3). Há testes que garantem isto, porque a secção "Como funciona" cita esses números.
 
-## Estrutura do projecto
+## Editar o conteúdo
 
-```text
-pasta compos/
-├── docs/                 # Documentação técnica (40 ficheiros)
-├── public/               # Assets estáticos (favicon)
-├── src/
-│   ├── app/              # App root (App.tsx)
-│   ├── content/          # Dados do portfólio (profile.ts)
-│   ├── cortex/           # Orquestrador (engine + animator)
-│   ├── hooks/            # React hooks (scroll navigation)
-│   ├── navigation/       # Grafo direccional e scroll tour
-│   ├── store/            # Zustand (lab-store)
-│   ├── styles/           # CSS global (Tailwind)
-│   ├── synapse/          # Event bus (pub/sub)
-│   ├── theory/
-│   │   ├── algorithms/   # pathfind, heuristic
-│   │   ├── automata/     # DFA, PDA, Turing
-│   │   ├── graph/        # CS_GRAPH, edges, ops
-│   │   └── structures/   # min-heap, queue, stack
-│   ├── ui/               # Componentes (CSLab, ScrollSite, DockNav…)
-│   └── views/            # Uma vista por secção
-├── index.html
-├── package.json
-├── vite.config.ts
-└── tsconfig*.json
-```
-
-## Arquitectura
-
-```text
-Utilizador  →  Synapse (event bus)  →  Cortex (engine)
-                    ↓                        ↓
-              Zustand store  ←  Animator  ←  Theory (grafo + algos + autômatos)
-                    ↓
-              React (views + ui)
-```
-
-A UI não calcula rotas. O **Cortex** resolve pathfinding, valida estados e emite eventos; o React observa e anima.
-
-## Personalizar conteúdo
-
-Edita `src/content/profile.ts` — fonte única para nome, bio, educação, experiência, projetos e links.
-
-## Documentação
-
-Índice completo em [`docs/README.md`](docs/README.md). Pontos de entrada:
-
-- [Visão geral](docs/00-Visao-Geral.md)
-- [Arquitectura](docs/01-Arquitetura.md)
-- [Estrutura de diretórios](docs/33-Estrutura-de-Diretorios.md)
-- [Deploy](docs/25-Deploy.md)
-- [Contribuição](docs/27-Contribuicao.md)
+Bio, projetos, percurso, competências e contactos estão todos em `src/content/profile.ts`. As capturas dos projetos ficam em `public/projects/`.
 
 ## Stack
 
-React 19 · TypeScript · Vite 7 · Tailwind CSS 4 · Framer Motion · Zustand · Vitest
+React 19, TypeScript, Vite 7, Tailwind CSS 4, Framer Motion, Zustand e Vitest.
+
+Como o código está organizado: [`docs/arquitetura.md`](docs/arquitetura.md).
 
 ## Licença
 
-Projecto privado — todos os direitos reservados.
+Projeto privado, todos os direitos reservados.
