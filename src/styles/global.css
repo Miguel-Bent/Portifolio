@@ -426,13 +426,13 @@ svg g[role='button']:focus-visible circle {
 }
 
 .site-section__inner {
-  padding: 2rem 1.25rem 4rem;
+  padding: 2rem 1.25rem 7rem; /* folga para a dock fixa */
   max-width: 52rem;
 }
 
 @media (min-width: 1024px) {
   .site-section__inner {
-    padding: 2.5rem 2.5rem 4rem;
+    padding: 2.5rem 2.5rem 7.5rem;
   }
 }
 
